@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center mb-4">
               <img
-                src="/silvana parodi fondo transparente.png"
+                src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
                 alt="Silvana Parodi Propiedades"
                 className="h-36 w-auto object-contain"
               />

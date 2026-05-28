@@ -16,10 +16,8 @@ export default function IntroScreen({ onDone }) {
 
   return (
     <div className={`intro-screen${leaving ? ' intro-leaving' : ''}`}>
-      <img src="/fotomodificada.jpg" className="intro-img" alt="" />
-      <div className="intro-logo">
-        <img src="/silvana parodi fondo transparente.png" alt="Silvana Parodi Propiedades" />
-      </div>
+      <img src={`${import.meta.env.BASE_URL}fotomodificada.jpg`} className="intro-img-bg" alt="" />
+      <img src={`${import.meta.env.BASE_URL}fotomodificada.jpg`} className="intro-img" alt="" />
     </div>
   );
 }

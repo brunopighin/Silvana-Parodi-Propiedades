@@ -47,7 +47,7 @@ export default function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center flex-shrink-0">
             <img
-              src="/silvana parodi fondo transparente.png"
+              src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
               alt="Silvana Parodi Propiedades"
               className="h-48 md:h-56 w-auto object-contain"
             />

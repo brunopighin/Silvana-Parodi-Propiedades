@@ -106,7 +106,7 @@ export default function Home() {
 
         <div className="relative container mx-auto px-4 pt-24 pb-16 flex flex-col items-center text-center">
           <img
-            src="/silvana parodi fondo transparente.png"
+            src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
             alt="Silvana Parodi Propiedades"
             className="hero-3d-logo w-72 md:w-96 lg:w-[480px] drop-shadow-2xl mb-6"
             style={{

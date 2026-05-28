@@ -79,7 +79,7 @@ export default function Services() {
             </div>
             <div className="hidden lg:flex justify-end">
               <img
-                src="/foto  copia inmobiliariaaaaaa.jpeg"
+                src={`${import.meta.env.BASE_URL}foto  copia inmobiliariaaaaaa.jpeg`}
                 alt="Servicios inmobiliarios"
                 className="w-full max-w-md h-72 object-cover rounded-2xl shadow-xl"
               />
