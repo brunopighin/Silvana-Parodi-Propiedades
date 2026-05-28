@@ -16,7 +16,7 @@ export default function Footer() {
               <img
                 src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
                 alt="Silvana Parodi Propiedades"
-                className="h-36 w-auto object-contain"
+                className="h-24 w-auto object-contain"
               />
             </Link>
             {settings.matricula && (

@@ -49,7 +49,7 @@ export default function Header() {
             <img
               src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
               alt="Silvana Parodi Propiedades"
-              className="h-48 md:h-56 w-auto object-contain"
+              className="h-16 md:h-20 w-auto object-contain"
             />
           </Link>
 
@@ -79,7 +79,7 @@ export default function Header() {
           {/* Mobile menu toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className={`lg:hidden p-2 rounded-lg transition-colors ${
+            className={`lg:hidden p-3 rounded-lg transition-colors ${
               'text-white hover:bg-white/10'
             }`}
             aria-label="Menú"

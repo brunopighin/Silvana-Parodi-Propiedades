@@ -123,14 +123,14 @@ export default function PropertyCard({ property }) {
         </p>
 
         {/* Features */}
-        <div className="grid grid-cols-4 gap-1 mb-3 py-2 border-t border-gray-100">
+        <div className="grid grid-cols-4 gap-2 mb-3 py-2 border-t border-gray-100">
           {property.rooms && (
             <div className="flex flex-col items-center gap-0.5">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               </svg>
               <span className="text-xs font-semibold text-gray-700">{property.rooms}</span>
-              <span className="text-[10px] text-gray-400">amb.</span>
+              <span className="text-xs text-gray-400">amb.</span>
             </div>
           )}
           {property.bedrooms !== null && property.bedrooms !== undefined && (
@@ -139,7 +139,7 @@ export default function PropertyCard({ property }) {
                 <path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7h18M3 7l2.5-4h13L21 7"/>
               </svg>
               <span className="text-xs font-semibold text-gray-700">{property.bedrooms}</span>
-              <span className="text-[10px] text-gray-400">dorm.</span>
+              <span className="text-xs text-gray-400">dorm.</span>
             </div>
           )}
           {property.bathrooms && (
@@ -148,7 +148,7 @@ export default function PropertyCard({ property }) {
                 <path d="M9 6 C9 4.34 10.34 3 12 3 C13.66 3 15 4.34 15 6 L15 10 L3 10 L3 14 C3 17.31 5.69 20 9 20 L15 20 C18.31 20 21 17.31 21 14 L21 10 L15 10"/>
               </svg>
               <span className="text-xs font-semibold text-gray-700">{property.bathrooms}</span>
-              <span className="text-[10px] text-gray-400">baños</span>
+              <span className="text-xs text-gray-400">baños</span>
             </div>
           )}
           {property.coveredArea && (
@@ -158,7 +158,7 @@ export default function PropertyCard({ property }) {
                 <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
               </svg>
               <span className="text-xs font-semibold text-gray-700">{property.coveredArea}</span>
-              <span className="text-[10px] text-gray-400">m²</span>
+              <span className="text-xs text-gray-400">m²</span>
             </div>
           )}
         </div>

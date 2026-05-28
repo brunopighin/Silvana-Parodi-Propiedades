@@ -108,7 +108,7 @@ export default function Home() {
           <img
             src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
             alt="Silvana Parodi Propiedades"
-            className="hero-3d-logo w-72 md:w-96 lg:w-[480px] drop-shadow-2xl mb-6"
+            className="hero-3d-logo w-48 sm:w-64 md:w-96 lg:w-[480px] drop-shadow-2xl mb-6"
             style={{
               transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
               transition: 'transform 0.15s ease-out',
