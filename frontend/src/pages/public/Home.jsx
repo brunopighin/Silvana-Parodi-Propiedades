@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { HelmetProvider, Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import LocalBusinessSchema from '../../components/seo/LocalBusinessSchema';
 import PropertyCard from '../../components/ui/PropertyCard';
 import SearchBar from '../../components/ui/SearchBar';
@@ -106,7 +106,7 @@ export default function Home() {
 
         <div className="relative container mx-auto px-4 pt-24 pb-16 flex flex-col items-center text-center">
           <img
-            src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
+            src={`${import.meta.env.BASE_URL}logo-silvana-parodi.png`}
             alt="Silvana Parodi Propiedades"
             className="hero-3d-logo w-48 sm:w-64 md:w-96 lg:w-[480px] drop-shadow-2xl mb-6"
             style={{

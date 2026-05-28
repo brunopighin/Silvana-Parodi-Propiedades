@@ -17,7 +17,7 @@ export default function IntroScreen({ onDone }) {
   return (
     <div className={`intro-wrap intro-${phase}`}>
       <img
-        src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
+        src={`${import.meta.env.BASE_URL}logo-silvana-parodi.png`}
         alt="Silvana Parodi Propiedades"
         className="intro-logo-img"
       />

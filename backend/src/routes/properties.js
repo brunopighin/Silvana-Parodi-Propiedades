@@ -1,14 +1,14 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const slugify = require('slugify');
-const { protect } = require('../middleware/auth');
+const { protect, optionalAuth } = require('../middleware/auth');
 const { upload, processUploadedImages, deleteImage, videoUpload, deleteVideo } = require('../middleware/upload');
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 // GET /api/properties - Lista pública con filtros
-router.get('/', async (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   try {
     const {
       operation, type, city, neighborhood, province,
@@ -17,8 +17,12 @@ router.get('/', async (req, res) => {
       page = 1, limit = 12, sortBy = 'createdAt', sortOrder = 'desc',
     } = req.query;
 
+    const ALLOWED_SORT_FIELDS = ['createdAt', 'price', 'title', 'updatedAt'];
+    const safeSortBy = ALLOWED_SORT_FIELDS.includes(sortBy) ? sortBy : 'createdAt';
+    const safeSortOrder = sortOrder === 'asc' ? 'asc' : 'desc';
+
     const where = {};
-    const isAdmin = req.headers.authorization;
+    const isAdmin = req.user?.role === 'admin';
 
     // Solo mostrar disponibles al público
     if (!isAdmin) {
@@ -63,7 +67,7 @@ router.get('/', async (req, res) => {
             take: 3,
           },
         },
-        orderBy: { [sortBy]: sortOrder },
+        orderBy: { [safeSortBy]: safeSortOrder },
         skip,
         take: parseInt(limit),
       }),

@@ -92,8 +92,9 @@ export default function PropertyDetail() {
   }
 
   const whatsappUrl = propertyWhatsAppMessage(property, settings.whatsapp || '5492323537248');
-  const amenities = property.amenities ? JSON.parse(property.amenities) : [];
-  const services = property.services ? JSON.parse(property.services) : [];
+  let amenities = [], services = [];
+  try { amenities = property.amenities ? JSON.parse(property.amenities) : []; } catch {}
+  try { services = property.services ? JSON.parse(property.services) : []; } catch {}
 
   return (
     <>

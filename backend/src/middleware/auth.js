@@ -3,6 +3,22 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+// Middleware opcional: si hay token válido setea req.user, si no continúa igual
+const optionalAuth = async (req, res, next) => {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer')) return next();
+  const token = header.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      select: { id: true, role: true },
+    });
+    if (user) req.user = user;
+  } catch { /* token inválido — continúa como anónimo */ }
+  next();
+};
+
 const protect = async (req, res, next) => {
   let token;
 
@@ -32,4 +48,4 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+module.exports = { protect, optionalAuth };

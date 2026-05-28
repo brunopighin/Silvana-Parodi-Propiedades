@@ -47,7 +47,7 @@ export default function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center flex-shrink-0">
             <img
-              src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
+              src={`${import.meta.env.BASE_URL}logo-silvana-parodi.png`}
               alt="Silvana Parodi Propiedades"
               className="h-16 md:h-20 w-auto object-contain"
             />
@@ -106,7 +106,7 @@ export default function Header() {
               className={({ isActive }) =>
                 `px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                   isActive
-                    ? 'bg-white/20 text-white'
+                    ? 'bg-primary-500 text-white'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`
               }

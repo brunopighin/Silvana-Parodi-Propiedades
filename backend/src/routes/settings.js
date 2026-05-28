@@ -5,12 +5,22 @@ const { protect } = require('../middleware/auth');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// GET /api/settings (público - para datos de contacto, config general)
+// Claves que se exponen públicamente
+const PUBLIC_KEYS = new Set([
+  'agency_name', 'agency_tagline', 'agency_description',
+  'phone', 'whatsapp', 'email', 'address', 'city',
+  'hero_title', 'hero_subtitle', 'meta_title', 'meta_description',
+  'facebook', 'instagram', 'matricula',
+]);
+
+// GET /api/settings (público - solo datos de contacto y config general)
 router.get('/', async (req, res) => {
   try {
     const settings = await prisma.setting.findMany();
     const obj = {};
-    settings.forEach((s) => { obj[s.key] = s.value; });
+    settings.forEach((s) => {
+      if (PUBLIC_KEYS.has(s.key)) obj[s.key] = s.value;
+    });
     res.json(obj);
   } catch {
     res.status(500).json({ error: 'Error al obtener configuración' });
