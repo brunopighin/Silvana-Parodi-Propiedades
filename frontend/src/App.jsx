@@ -1,11 +1,9 @@
-import { useState, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import WhatsAppButton from './components/ui/WhatsAppButton';
 import ScrollToTop from './components/ui/ScrollToTop';
-import IntroScreen from './components/ui/IntroScreen';
 
 // Public pages
 import Home from './pages/public/Home';
@@ -56,15 +54,8 @@ function PublicLayout({ children }) {
 }
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem('intro-done'));
-  const handleIntroDone = useCallback(() => {
-    sessionStorage.setItem('intro-done', '1');
-    setShowIntro(false);
-  }, []);
-
   return (
     <>
-    {showIntro && <IntroScreen onDone={handleIntroDone} />}
     <ScrollToTop />
     <Routes>
       {/* Public routes */}
