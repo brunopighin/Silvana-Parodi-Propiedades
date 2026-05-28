@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react';
 
 export default function IntroScreen({ onDone }) {
-  const [leaving, setLeaving] = useState(false);
+  const [phase, setPhase] = useState('enter'); // enter → hold → leave
 
   useEffect(() => {
-    const show = setTimeout(() => setLeaving(true), 2400);
-    return () => clearTimeout(show);
+    const hold  = setTimeout(() => setPhase('leave'), 1800);
+    return () => clearTimeout(hold);
   }, []);
 
   useEffect(() => {
-    if (!leaving) return;
-    const exit = setTimeout(onDone, 900);
+    if (phase !== 'leave') return;
+    const exit = setTimeout(onDone, 800);
     return () => clearTimeout(exit);
-  }, [leaving, onDone]);
+  }, [phase, onDone]);
 
   return (
-    <div className={`intro-screen${leaving ? ' intro-leaving' : ''}`}>
-      <img src={`${import.meta.env.BASE_URL}fotomodificada.jpg`} className="intro-img-bg" alt="" />
-      <img src={`${import.meta.env.BASE_URL}fotomodificada.jpg`} className="intro-img" alt="" />
+    <div className={`intro-wrap intro-${phase}`}>
+      <img
+        src={`${import.meta.env.BASE_URL}silvana parodi fondo transparente.png`}
+        alt="Silvana Parodi Propiedades"
+        className="intro-logo-img"
+      />
     </div>
   );
 }
