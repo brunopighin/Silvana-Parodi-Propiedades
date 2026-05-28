@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://www.silvanaparodi.com.ar/sitemap.xml

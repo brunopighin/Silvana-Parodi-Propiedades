@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Environment variables (never commit these)
+.env
+.env.local
+.env.production
+
+# Database
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+backend/prisma/*.db
+
+# Uploaded files
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Build output
+frontend/dist/
+backend/dist/
+
+# Logs
+*.log
+*.err
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Claude Code local config
+.claude/

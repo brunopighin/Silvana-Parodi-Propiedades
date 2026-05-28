@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Property {
+  id           Int       @id @default(autoincrement())
+  title        String
+  slug         String    @unique
+  description  String
+  price        Float
+  currency     String    @default("ARS")
+  operation    String    // venta, alquiler, alquiler-temporario
+  type         String    // casa, departamento, ph, local, oficina, terreno, galpon, campo, cochera
+  status       String    @default("disponible") // disponible, vendido, alquilado, reservado
+  featured     Boolean   @default(false)
+  isNew        Boolean   @default(false)
+  address      String
+  city         String
+  province     String    @default("Buenos Aires")
+  neighborhood String?
+  zipCode      String?
+  latitude     Float?
+  longitude    Float?
+  totalArea    Float?
+  coveredArea  Float?
+  rooms        Int?
+  bedrooms     Int?
+  bathrooms    Int?
+  toilets      Int?
+  garage       Boolean   @default(false)
+  garageSpaces Int?
+  pool         Boolean   @default(false)
+  garden       Boolean   @default(false)
+  terrace      Boolean   @default(false)
+  balcony      Boolean   @default(false)
+  amenities    String?
+  services     String?
+  expenses     Float?
+  expensesCurrency String @default("ARS")
+  yearBuilt    Int?
+  floors       Int?
+  floor        Int?
+  orientation  String?
+  condition    String?   // excelente, muy-bueno, bueno, a-refaccionar
+  videoUrl     String?
+  views        Int       @default(0)
+  images       Image[]
+  inquiries    Inquiry[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Image {
+  id           Int      @id @default(autoincrement())
+  url          String
+  thumbnailUrl String?
+  publicId     String?
+  order        Int      @default(0)
+  isMain       Boolean  @default(false)
+  propertyId   Int
+  property     Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+}
+
+model Inquiry {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String
+  phone      String?
+  message    String
+  propertyId Int?
+  property   Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  read       Boolean   @default(false)
+  archived   Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  text      String
+  rating    Int      @default(5)
+  photo     String?
+  role      String?
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
