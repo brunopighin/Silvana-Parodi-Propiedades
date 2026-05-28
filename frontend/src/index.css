@@ -163,6 +163,55 @@
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Intro screen */
+.intro-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  background: #000;
+}
+
+.intro-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: introZoom 3.5s ease forwards;
+}
+
+@keyframes introZoom {
+  0%   { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+.intro-logo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: introLogoFade 1s ease 0.4s both;
+}
+
+.intro-logo img {
+  width: min(380px, 70vw);
+  filter: drop-shadow(0 4px 32px rgba(0,0,0,0.6));
+}
+
+@keyframes introLogoFade {
+  0%   { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.intro-leaving {
+  animation: introCurtain 0.9s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes introCurtain {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+
 /* Page 3D entrance — se aplica a cada página al navegar */
 @keyframes pageReveal3d {
   0% {
