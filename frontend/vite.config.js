@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.GITHUB_ACTIONS ? '/Silvana-Parodi-Propiedades./' : '/',
+  base: process.env.GITHUB_ACTIONS ? '/Silvana-Parodi-Propiedades/' : '/',
   server: {
     port: 5174,
     host: true,
