@@ -66,24 +66,15 @@ export default function Services() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-600 to-primary-500" />
           <div className="absolute inset-0 bg-hero-pattern opacity-30" />
           <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-transparent via-primary-600 to-transparent" />
-          <div className="relative container mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <span className="section-tag text-primary-400">Servicios</span>
-              <h1 className="font-display text-4xl md:text-5xl font-bold text-white mt-2 mb-4">
-                Servicios inmobiliarios
-                <span className="block text-white/70">a tu medida</span>
-              </h1>
-              <p className="text-white/80 max-w-xl text-lg">
-                Tasaciones, ventas, alquileres y administración. Siempre con el respaldo de Silvana Parodi.
-              </p>
-            </div>
-            <div className="hidden lg:flex justify-end">
-              <img
-                src={`${import.meta.env.BASE_URL}foto  copia inmobiliariaaaaaa.jpeg`}
-                alt="Servicios inmobiliarios"
-                className="w-full max-w-md h-72 object-cover rounded-2xl shadow-xl"
-              />
-            </div>
+          <div className="relative container mx-auto px-4">
+            <span className="section-tag text-primary-400">Servicios</span>
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-white mt-2 mb-4">
+              Servicios inmobiliarios
+              <span className="block text-white/70">a tu medida</span>
+            </h1>
+            <p className="text-white/80 max-w-xl text-lg">
+              Tasaciones, ventas, alquileres y administración. Siempre con el respaldo de Silvana Parodi.
+            </p>
           </div>
         </section>
 
