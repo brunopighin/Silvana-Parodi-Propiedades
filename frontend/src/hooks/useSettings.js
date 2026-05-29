@@ -3,7 +3,7 @@ import { settingsApi } from '../api/client';
 
 const DEFAULT_SETTINGS = {
   agency_name: 'Silvana Parodi Propiedades',
-  agency_tagline: 'No es un trabajo, es una pasión ❤️',
+  agency_tagline: 'No es un trabajo, es una pasión',
   agency_description: '',
   phone: '+5492323537248',
   whatsapp: '5492323537248',
