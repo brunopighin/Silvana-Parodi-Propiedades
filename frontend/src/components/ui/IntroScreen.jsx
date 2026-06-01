@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 
 export default function IntroScreen({ onDone }) {
-  const [phase, setPhase] = useState('enter'); // enter → hold → leave
+  const [phase, setPhase] = useState('enter');
 
   useEffect(() => {
-    const hold  = setTimeout(() => setPhase('leave'), 1800);
-    return () => clearTimeout(hold);
+    const t = setTimeout(() => setPhase('leave'), 1800);
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
     if (phase !== 'leave') return;
-    const exit = setTimeout(onDone, 800);
-    return () => clearTimeout(exit);
+    const t = setTimeout(onDone, 800);
+    return () => clearTimeout(t);
   }, [phase, onDone]);
 
   return (

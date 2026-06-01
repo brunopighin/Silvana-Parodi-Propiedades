@@ -197,7 +197,6 @@
   0%   { transform: translateY(0); }
   100% { transform: translateY(-100%); }
 }
-
 /* Page 3D entrance — se aplica a cada página al navegar */
 @keyframes pageReveal3d {
   0% {

@@ -48,4 +48,11 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect, optionalAuth };
+const requireAdmin = (req, res, next) => {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
+  next();
+};
+
+module.exports = { protect, requireAdmin, optionalAuth };

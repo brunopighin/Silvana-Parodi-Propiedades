@@ -290,8 +290,7 @@ async function main() {
   console.log('✓ Testimonios de ejemplo creados');
 
   console.log('\n✅ Seed completado exitosamente!');
-  console.log('📧 Admin email:', process.env.ADMIN_EMAIL || 'admin@inmobiliaria.com');
-  console.log('🔑 Admin password:', process.env.ADMIN_PASSWORD || 'admin123');
+  console.log('📧 Admin email configurado');
 }
 
 main()

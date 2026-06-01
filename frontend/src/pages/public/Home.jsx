@@ -52,6 +52,7 @@ export default function Home() {
   const { settings } = useSettings();
   const servicesRef = useReveal();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [heroSlide, setHeroSlide] = useState(0);
 
   const handleHeroMouseMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -73,6 +74,16 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
+  const heroImages = featured
+    .flatMap(p => p.images?.slice(0, 1).map(img => img.url) ?? [])
+    .slice(0, 5);
+
+  useEffect(() => {
+    if (heroImages.length < 2) return;
+    const t = setInterval(() => setHeroSlide(s => (s + 1) % heroImages.length), 5000);
+    return () => clearInterval(t);
+  }, [heroImages.length]);
+
   const whatsappUrl = buildWhatsAppUrl(
     settings.whatsapp || '5492323537248',
     '¡Hola! Quiero consultar sobre sus propiedades.'
@@ -88,39 +99,49 @@ export default function Home() {
 
       {/* HERO */}
       <section
-        className="relative min-h-screen flex items-center overflow-hidden"
+        className="relative h-screen flex items-center overflow-hidden"
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
         style={{ perspective: '1200px' }}
       >
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-600 to-primary-500">
-          <div className="absolute inset-0 bg-hero-pattern opacity-30" />
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-900/40 to-transparent" />
-          <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl" />
-          <div className="absolute -top-32 -left-32 w-80 h-80 bg-primary-600/10 rounded-full blur-3xl" />
-        </div>
+        {/* Fondo rojo fallback */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-700 to-primary-800" />
 
-        {/* Red side accent bar */}
-        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-transparent via-primary-600 to-transparent" />
+        {/* Carousel de fotos */}
+        {heroImages.map((src, i) => (
+          <div
+            key={src}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${src})`,
+              opacity: i === heroSlide ? 1 : 0,
+              transition: 'opacity 1.4s ease',
+            }}
+          />
+        ))}
 
-        <div className="relative container mx-auto px-4 pt-24 pb-16 flex flex-col items-center text-center">
+        {/* Overlay para legibilidad */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
+
+
+        <div className="relative container mx-auto px-4 flex flex-col items-center text-center" style={{ marginTop: '5vh' }}>
           <img
             src={`${import.meta.env.BASE_URL}logo-silvana-parodi.png`}
             alt="Silvana Parodi Propiedades"
-            className="hero-3d-logo w-48 sm:w-64 md:w-96 lg:w-[480px] drop-shadow-2xl mb-6"
+            className="hero-3d-logo w-56 sm:w-72 md:w-[380px] lg:w-[480px] drop-shadow-2xl mb-4"
             style={{
               transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
               transition: 'transform 0.15s ease-out',
             }}
           />
-          <h1 className="hero-3d-title font-display text-2xl md:text-3xl font-bold text-white leading-tight mb-3 max-w-2xl">
-            {settings.hero_title || 'Encontrá tu propiedad ideal'}
+          <h1 className="hero-3d-title font-display text-2xl md:text-4xl font-bold text-white leading-tight mb-3 max-w-2xl">
+            {settings.hero_title || 'Tu próximo hogar empieza acá.'}
           </h1>
-          <p className="hero-3d-subtitle text-sm md:text-base text-white/70 leading-relaxed mb-8 max-w-xl">
-            {settings.hero_subtitle || 'Más de 15 años conectando personas con sus hogares. Vendemos, alquilamos y asesoramos con la confianza que merecés.'}
+          <p className="hero-3d-subtitle text-sm md:text-base text-white/75 leading-relaxed mb-6 max-w-xl">
+            {settings.hero_subtitle || 'Sabemos que buscar una propiedad es mucho más que un trámite: es una decisión de vida. Por eso, te brindamos la atención cálida y honesta que te merecés, para cuidar tu patrimonio. Encontrá tu espacio con nosotros.'}
           </p>
-          <div className="hero-3d-buttons flex flex-wrap justify-center gap-4 mb-12">
+          <div className="hero-3d-buttons flex flex-wrap justify-center gap-4">
             <Link to="/propiedades?operation=venta"
               className="inline-flex items-center gap-2 border-2 border-white/30 text-white hover:bg-white/10 font-semibold px-6 py-3 rounded-xl transition-all">
               Ver propiedades en venta
@@ -131,6 +152,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 animate-bounce">

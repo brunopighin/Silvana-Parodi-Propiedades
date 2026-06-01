@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const { protect } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/testimonials/all (admin: todos)
-router.get('/all', protect, async (req, res) => {
+router.get('/all', protect, requireAdmin, async (req, res) => {
   try {
     const testimonials = await prisma.testimonial.findMany({
       orderBy: { order: 'asc' },
@@ -31,7 +31,7 @@ router.get('/all', protect, async (req, res) => {
 });
 
 // POST /api/testimonials (admin)
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, requireAdmin, async (req, res) => {
   try {
     const { name, text, rating, role, active, order } = req.body;
     const testimonial = await prisma.testimonial.create({
@@ -51,7 +51,7 @@ router.post('/', protect, async (req, res) => {
 });
 
 // PUT /api/testimonials/:id (admin)
-router.put('/:id', protect, async (req, res) => {
+router.put('/:id', protect, requireAdmin, async (req, res) => {
   try {
     const { name, text, rating, role, active, order } = req.body;
     const testimonial = await prisma.testimonial.update({
@@ -72,7 +72,7 @@ router.put('/:id', protect, async (req, res) => {
 });
 
 // DELETE /api/testimonials/:id (admin)
-router.delete('/:id', protect, async (req, res) => {
+router.delete('/:id', protect, requireAdmin, async (req, res) => {
   try {
     await prisma.testimonial.delete({ where: { id: parseInt(req.params.id) } });
     res.json({ message: 'Testimonio eliminado' });

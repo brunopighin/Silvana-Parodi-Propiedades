@@ -22,7 +22,7 @@ model Property {
   title        String
   slug         String    @unique
   description  String
-  price        Float
+  price        Float?
   currency     String    @default("ARS")
   operation    String    // venta, alquiler, alquiler-temporario
   type         String    // casa, departamento, ph, local, oficina, terreno, galpon, campo, cochera
@@ -45,6 +45,8 @@ model Property {
   garage       Boolean   @default(false)
   garageSpaces Int?
   pool         Boolean   @default(false)
+  acceptsTradeIn Boolean @default(false)
+  aptaCredito    Boolean @default(false)
   garden       Boolean   @default(false)
   terrace      Boolean   @default(false)
   balcony      Boolean   @default(false)

@@ -38,6 +38,8 @@ export default function PropertyForm() {
       balcony: false,
       featured: false,
       isNew: false,
+      acceptsTradeIn: false,
+      aptaCredito: false,
     },
   });
 
@@ -76,6 +78,8 @@ export default function PropertyForm() {
         balcony: data.balcony === true || data.balcony === 'true',
         featured: data.featured === true || data.featured === 'true',
         isNew: data.isNew === true || data.isNew === 'true',
+        acceptsTradeIn: data.acceptsTradeIn === true || data.acceptsTradeIn === 'true',
+        aptaCredito: data.aptaCredito === true || data.aptaCredito === 'true',
       };
 
       if (isEdit) {
@@ -189,9 +193,9 @@ export default function PropertyForm() {
                     </select>
                   </div>
                   <div>
-                    <label className="label">Precio *</label>
-                    <input {...register('price', { required: 'Requerido' })} type="text"
-                      className={`input ${errors.price ? 'input-error' : ''}`} placeholder="Ej: 150.000" />
+                    <label className="label">Precio</label>
+                    <input {...register('price')} type="text"
+                      className="input" placeholder="Ej: 150.000" />
                   </div>
                   <div>
                     <label className="label">Moneda</label>
@@ -208,7 +212,7 @@ export default function PropertyForm() {
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="label">Dirección *</label>
+                    <label className="label">Dirección</label>
                     <AddressAutocomplete
                       value={watch('address') || ''}
                       onChange={(v) => setValue('address', v)}
@@ -222,7 +226,7 @@ export default function PropertyForm() {
                       }}
                       error={!!errors.address}
                     />
-                    <input type="hidden" {...register('address', { required: 'Requerido' })} />
+                    <input type="hidden" {...register('address')} />
                     {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address.message}</p>}
                   </div>
                   <div>
@@ -324,6 +328,8 @@ export default function PropertyForm() {
                     { name: 'garden', label: 'Jardín' },
                     { name: 'terrace', label: 'Terraza' },
                     { name: 'balcony', label: 'Balcón' },
+                    { name: 'acceptsTradeIn', label: 'Acepta entrega y financiación' },
+                    { name: 'aptaCredito', label: 'Apta crédito' },
                   ].map(({ name, label }) => (
                     <label key={name} className="flex items-center gap-2.5 cursor-pointer">
                       <input type="checkbox" {...register(name)} className="w-4 h-4 accent-primary-500 rounded" />

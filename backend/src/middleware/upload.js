@@ -42,16 +42,16 @@ const processImage = async (buffer, filename) => {
   const fullPath = path.join(uploadsDir, name);
   const thumbPath = path.join(thumbnailsDir, thumbName);
 
-  // Imagen principal: max 1200px ancho, calidad 82%
+  // Imagen principal: max 1920px ancho, calidad 88%
   await sharp(buffer)
-    .resize(1200, 900, { fit: 'inside', withoutEnlargement: true })
-    .webp({ quality: 82 })
+    .resize(1920, 1440, { fit: 'inside', withoutEnlargement: true })
+    .webp({ quality: 88 })
     .toFile(fullPath);
 
-  // Miniatura: 400x300, calidad 70%
+  // Miniatura: 800x600, calidad 80%
   await sharp(buffer)
-    .resize(400, 300, { fit: 'cover' })
-    .webp({ quality: 70 })
+    .resize(800, 600, { fit: 'cover' })
+    .webp({ quality: 80 })
     .toFile(thumbPath);
 
   return {

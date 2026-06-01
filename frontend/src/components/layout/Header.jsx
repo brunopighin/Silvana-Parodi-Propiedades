@@ -49,7 +49,9 @@ export default function Header() {
             <img
               src={`${import.meta.env.BASE_URL}logo-silvana-parodi.png`}
               alt="Silvana Parodi Propiedades"
-              className="h-16 md:h-20 w-auto object-contain"
+              className={`h-48 md:h-56 w-auto object-contain transition-all duration-300 ${
+                isTransparent ? 'opacity-0 scale-90 pointer-events-none' : 'opacity-100 scale-100'
+              }`}
             />
           </Link>
 

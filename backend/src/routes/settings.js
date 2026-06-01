@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const { protect } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 });
 
 // PUT /api/settings (admin)
-router.put('/', protect, async (req, res) => {
+router.put('/', protect, requireAdmin, async (req, res) => {
   try {
     const updates = req.body; // { key: value, ... }
 

@@ -135,16 +135,13 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10 bg-primary-700/60">
-        <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8">
           <p className="text-xs text-white/70">
             © {year} {settings.agency_name || 'Silvana Parodi Propiedades'}. Todos los derechos reservados.
           </p>
           <p className="text-xs text-white/70">
             Desarrollado por <span className="hover:text-white transition-colors">bjpsistemas</span>
           </p>
-          <div className="flex gap-4 text-xs text-white/70">
-            <Link to="/admin/login" className="hover:text-white transition-colors">Administración</Link>
-          </div>
         </div>
       </div>
     </footer>

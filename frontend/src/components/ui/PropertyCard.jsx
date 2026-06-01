@@ -45,7 +45,7 @@ export default function PropertyCard({ property }) {
         <Link to={`/propiedad/${property.slug}`}>
           {mainImage ? (
             <img
-              src={mainImage.thumbnailUrl || mainImage.url}
+              src={mainImage.url}
               alt={property.title}
               className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
                 isUnavailable ? 'grayscale-[40%]' : ''

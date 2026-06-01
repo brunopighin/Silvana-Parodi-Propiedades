@@ -1,7 +1,7 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const slugify = require('slugify');
-const { protect, optionalAuth } = require('../middleware/auth');
+const { protect, requireAdmin, optionalAuth } = require('../middleware/auth');
 const { upload, processUploadedImages, deleteImage, videoUpload, deleteVideo } = require('../middleware/upload');
 
 const router = express.Router();
@@ -90,7 +90,7 @@ router.get('/', optionalAuth, async (req, res) => {
 });
 
 // GET /api/properties/by-id/:id (admin)
-router.get('/by-id/:id', protect, async (req, res) => {
+router.get('/by-id/:id', protect, requireAdmin, async (req, res) => {
   try {
     const property = await prisma.property.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -162,7 +162,7 @@ router.get('/:slug', async (req, res) => {
 });
 
 // POST /api/properties - Crear (admin)
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, requireAdmin, async (req, res) => {
   try {
     const data = req.body;
 
@@ -183,7 +183,7 @@ router.post('/', protect, async (req, res) => {
       data: {
         ...data,
         slug,
-        price: parseFloat(data.price),
+        price: data.price ? parseFloat(data.price) : null,
         totalArea: data.totalArea ? parseFloat(data.totalArea) : null,
         coveredArea: data.coveredArea ? parseFloat(data.coveredArea) : null,
         rooms: data.rooms ? parseInt(data.rooms) : null,
@@ -210,12 +210,12 @@ router.post('/', protect, async (req, res) => {
     res.status(201).json(property);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al crear propiedad', details: err.message });
+    res.status(500).json({ error: 'Error al crear propiedad' });
   }
 });
 
 // PUT /api/properties/:id - Actualizar (admin)
-router.put('/:id', protect, async (req, res) => {
+router.put('/:id', protect, requireAdmin, async (req, res) => {
   try {
     const { id: _id, images, inquiries, createdAt, updatedAt, views, slug: _slug, videoUrl: _videoUrl, ...data } = req.body;
     const id = parseInt(req.params.id);
@@ -279,7 +279,7 @@ router.put('/:id', protect, async (req, res) => {
 });
 
 // DELETE /api/properties/:id
-router.delete('/:id', protect, async (req, res) => {
+router.delete('/:id', protect, requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const property = await prisma.property.findUnique({
@@ -304,7 +304,7 @@ router.delete('/:id', protect, async (req, res) => {
 });
 
 // POST /api/properties/:id/images - Subir imágenes
-router.post('/:id/images', protect, upload.array('images', 20), async (req, res) => {
+router.post('/:id/images', protect, requireAdmin, upload.array('images', 20), async (req, res) => {
   try {
     const propertyId = parseInt(req.params.id);
 
@@ -335,12 +335,12 @@ router.post('/:id/images', protect, upload.array('images', 20), async (req, res)
     res.status(201).json(images);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al subir imágenes', details: err.message });
+    res.status(500).json({ error: 'Error al subir imágenes' });
   }
 });
 
 // DELETE /api/properties/:id/images/:imageId
-router.delete('/:id/images/:imageId', protect, async (req, res) => {
+router.delete('/:id/images/:imageId', protect, requireAdmin, async (req, res) => {
   try {
     const imageId = parseInt(req.params.imageId);
     const image = await prisma.image.findUnique({ where: { id: imageId } });
@@ -368,7 +368,7 @@ router.delete('/:id/images/:imageId', protect, async (req, res) => {
 });
 
 // PUT /api/properties/:id/images/reorder
-router.put('/:id/images/reorder', protect, async (req, res) => {
+router.put('/:id/images/reorder', protect, requireAdmin, async (req, res) => {
   try {
     const { images } = req.body; // [{ id, order, isMain }]
 
@@ -388,7 +388,7 @@ router.put('/:id/images/reorder', protect, async (req, res) => {
 });
 
 // PUT /api/properties/:id/images/:imageId/main
-router.put('/:id/images/:imageId/main', protect, async (req, res) => {
+router.put('/:id/images/:imageId/main', protect, requireAdmin, async (req, res) => {
   try {
     const propertyId = parseInt(req.params.id);
     const imageId = parseInt(req.params.imageId);
@@ -403,7 +403,7 @@ router.put('/:id/images/:imageId/main', protect, async (req, res) => {
 });
 
 // POST /api/properties/:id/video
-router.post('/:id/video', protect, videoUpload.single('video'), async (req, res) => {
+router.post('/:id/video', protect, requireAdmin, videoUpload.single('video'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se envió ningún video' });
     const id = parseInt(req.params.id);
@@ -417,12 +417,12 @@ router.post('/:id/video', protect, videoUpload.single('video'), async (req, res)
     res.json({ videoUrl });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al subir video', details: err.message });
+    res.status(500).json({ error: 'Error al subir video' });
   }
 });
 
 // DELETE /api/properties/:id/video
-router.delete('/:id/video', protect, async (req, res) => {
+router.delete('/:id/video', protect, requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const property = await prisma.property.findUnique({ where: { id } });

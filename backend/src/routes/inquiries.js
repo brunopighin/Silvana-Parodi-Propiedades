@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const { protect } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
 });
 
 // GET /api/inquiries - Listar (admin)
-router.get('/', protect, async (req, res) => {
+router.get('/', protect, requireAdmin, async (req, res) => {
   try {
     const { page = 1, limit = 20, read, archived } = req.query;
     const where = {};
@@ -65,7 +65,7 @@ router.get('/', protect, async (req, res) => {
 });
 
 // PUT /api/inquiries/:id/read
-router.put('/:id/read', protect, async (req, res) => {
+router.put('/:id/read', protect, requireAdmin, async (req, res) => {
   try {
     await prisma.inquiry.update({
       where: { id: parseInt(req.params.id) },
@@ -78,7 +78,7 @@ router.put('/:id/read', protect, async (req, res) => {
 });
 
 // PUT /api/inquiries/:id/archive
-router.put('/:id/archive', protect, async (req, res) => {
+router.put('/:id/archive', protect, requireAdmin, async (req, res) => {
   try {
     await prisma.inquiry.update({
       where: { id: parseInt(req.params.id) },
@@ -91,7 +91,7 @@ router.put('/:id/archive', protect, async (req, res) => {
 });
 
 // DELETE /api/inquiries/:id
-router.delete('/:id', protect, async (req, res) => {
+router.delete('/:id', protect, requireAdmin, async (req, res) => {
   try {
     await prisma.inquiry.delete({ where: { id: parseInt(req.params.id) } });
     res.json({ message: 'Consulta eliminada' });
@@ -101,7 +101,7 @@ router.delete('/:id', protect, async (req, res) => {
 });
 
 // GET /api/inquiries/stats
-router.get('/stats/count', protect, async (req, res) => {
+router.get('/stats/count', protect, requireAdmin, async (req, res) => {
   try {
     const [total, unread] = await Promise.all([
       prisma.inquiry.count({ where: { archived: false } }),

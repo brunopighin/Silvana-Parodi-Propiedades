@@ -131,7 +131,7 @@ export default function PropertyDetail() {
           numberOfRooms: property.rooms,
           numberOfBedrooms: property.bedrooms,
           numberOfBathroomsTotal: property.bathrooms,
-        })}</script>
+        }).replace(/</g, '\\u003c')}</script>
       </Helmet>
 
       <div className="pt-20 min-h-screen bg-gray-50">
@@ -228,6 +228,8 @@ export default function PropertyDetail() {
                   <Feature icon="🚗" label="Cochera" value={property.garage ? `Sí (${property.garageSpaces || 1} lugar${(property.garageSpaces || 1) > 1 ? 'es' : ''})` : 'No'} />
                   <Feature icon="🏊" label="Pileta" value={property.pool ? 'Sí' : null} />
                   <Feature icon="🌿" label="Jardín" value={property.garden ? 'Sí' : null} />
+                  <Feature icon="🔄" label="Acepta entrega y financiación" value={property.acceptsTradeIn ? 'Sí' : null} />
+                  <Feature icon="🏦" label="Apta crédito" value={property.aptaCredito ? 'Sí' : null} />
                   <Feature icon="🏗️" label="Año de construcción" value={property.yearBuilt} />
                   <Feature icon="🧭" label="Orientación" value={property.orientation} />
                   <Feature icon="⭐" label="Estado" value={property.condition ? conditionLabel(property.condition) : null} />
@@ -270,11 +272,11 @@ export default function PropertyDetail() {
               {property.videoUrl && (
                 <div className="bg-white rounded-2xl p-6">
                   <h2 className="font-semibold text-gray-900 text-lg mb-4">Video de la propiedad</h2>
-                  <div className="rounded-xl overflow-hidden bg-black">
+                  <div className="rounded-xl overflow-hidden flex justify-center bg-gray-100">
                     <video
                       src={property.videoUrl}
                       controls
-                      className="w-full max-h-[480px] object-contain"
+                      className="max-h-[640px] max-w-full rounded-xl"
                       preload="metadata"
                     >
                       Tu navegador no soporta la reproducción de video.
