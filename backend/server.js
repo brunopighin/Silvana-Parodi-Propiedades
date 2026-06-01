@@ -29,7 +29,9 @@ const inquiryLimiter = rateLimit({
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL
+    : ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
 }));
 app.use(express.json({ limit: '50mb' }));
@@ -98,10 +100,18 @@ ${properties.map(p => `  <url>
   }
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Ruta no encontrada' });
-});
+// Servir frontend en producción
+if (process.env.NODE_ENV === 'production') {
+  const frontendDist = path.join(__dirname, '../frontend/dist');
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+} else {
+  app.use((req, res) => {
+    res.status(404).json({ error: 'Ruta no encontrada' });
+  });
+}
 
 // Error handler
 app.use((err, req, res, next) => {
