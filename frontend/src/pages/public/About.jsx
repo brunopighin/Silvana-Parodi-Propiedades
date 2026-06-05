@@ -17,7 +17,7 @@ export default function About() {
     <>
       <Helmet>
         <title>Quiénes Somos | Silvana Parodi Propiedades</title>
-        <meta name="description" content="Conocé la historia, valores y equipo de Silvana Parodi Propiedades. Más de 15 años en el mercado inmobiliario argentino." />
+        <meta name="description" content="Conocé la historia y valores de Silvana Parodi Propiedades. Martillera pública y corredora inmobiliaria con más de 80 operaciones exitosas." />
       </Helmet>
 
       <div className="pt-20">
