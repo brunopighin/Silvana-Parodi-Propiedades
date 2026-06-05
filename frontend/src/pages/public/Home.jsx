@@ -52,7 +52,6 @@ export default function Home() {
   const { settings } = useSettings();
   const servicesRef = useReveal();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [heroSlide, setHeroSlide] = useState(0);
 
   const handleHeroMouseMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -73,16 +72,6 @@ export default function Home() {
       .then(({ data }) => setTestimonials(data))
       .catch(() => {});
   }, []);
-
-  const heroImages = featured
-    .flatMap(p => p.images?.slice(0, 1).map(img => img.url) ?? [])
-    .slice(0, 5);
-
-  useEffect(() => {
-    if (heroImages.length < 2) return;
-    const t = setInterval(() => setHeroSlide(s => (s + 1) % heroImages.length), 5000);
-    return () => clearInterval(t);
-  }, [heroImages.length]);
 
   const whatsappUrl = buildWhatsAppUrl(
     settings.whatsapp || '5492323537248',
@@ -107,18 +96,17 @@ export default function Home() {
         {/* Fondo rojo fallback */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-700 to-primary-800" />
 
-        {/* Carousel de fotos */}
-        {heroImages.map((src, i) => (
-          <div
-            key={src}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${src})`,
-              opacity: i === heroSlide ? 1 : 0,
-              transition: 'opacity 1.4s ease',
-            }}
-          />
-        ))}
+        {/* Video de fondo */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src={`${import.meta.env.BASE_URL}IMG_7084.mov`} type="video/quicktime" />
+          <source src={`${import.meta.env.BASE_URL}IMG_7084.mov`} type="video/mp4" />
+        </video>
 
         {/* Overlay para legibilidad */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
