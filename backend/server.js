@@ -6,6 +6,9 @@ const rateLimit = require('express-rate-limit');
 
 const app = express();
 
+// Necesario para rate limiting detrás de proxy (Hostinger, Nginx, etc.)
+app.set('trust proxy', 1);
+
 // Rate limiting
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

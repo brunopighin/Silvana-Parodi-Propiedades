@@ -4,6 +4,9 @@ const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
+// Limitar threads de Sharp para hosting compartido
+sharp.concurrency(1);
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
