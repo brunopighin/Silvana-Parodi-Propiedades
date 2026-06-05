@@ -104,8 +104,8 @@ export default function Home() {
           loop
           playsInline
         >
-          <source src={`${import.meta.env.BASE_URL}IMG_7084.mov`} type="video/quicktime" />
-          <source src={`${import.meta.env.BASE_URL}IMG_7084.mov`} type="video/mp4" />
+          <source src="/uploads/IMG_7084.mov" type="video/quicktime" />
+          <source src="/uploads/IMG_7084.mov" type="video/mp4" />
         </video>
 
         {/* Overlay para legibilidad */}
