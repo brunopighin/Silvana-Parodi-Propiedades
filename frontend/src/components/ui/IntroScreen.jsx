@@ -4,7 +4,7 @@ export default function IntroScreen({ onDone }) {
   const [phase, setPhase] = useState('enter');
 
   useEffect(() => {
-    const t = setTimeout(() => setPhase('leave'), 1800);
+    const t = setTimeout(() => setPhase('leave'), 1900);
     return () => clearTimeout(t);
   }, []);
 
@@ -16,11 +16,15 @@ export default function IntroScreen({ onDone }) {
 
   return (
     <div className={`intro-wrap intro-${phase}`}>
-      <img
-        src={`${import.meta.env.BASE_URL}logo-silvana-parodi.png`}
-        alt="Silvana Parodi Propiedades"
-        className="intro-logo-img"
-      />
+      <div className="intro-glow" />
+      <div className="intro-logo-container">
+        <img
+          src={`${import.meta.env.BASE_URL}logo-silvana-parodi.png`}
+          alt="Silvana Parodi Propiedades"
+          className="intro-logo-img"
+        />
+      </div>
+      <div className="intro-shine" />
     </div>
   );
 }
