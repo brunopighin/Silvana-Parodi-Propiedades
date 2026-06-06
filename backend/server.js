@@ -58,22 +58,15 @@ app.get('/api/health', (req, res) => {
 
 // DB test (temporal - borrar después)
 app.get('/api/db-test', async (req, res) => {
-  const { Pool } = require('pg');
+  const prisma = require('./src/lib/prisma');
   const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Timeout: sin respuesta después de 6s')), 6000)
+    setTimeout(() => reject(new Error('Timeout: Prisma no respondió en 6s')), 6000)
   );
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    connectionTimeoutMillis: 5000,
-    ssl: { rejectUnauthorized: false },
-  });
   try {
-    const result = await Promise.race([pool.query('SELECT 1 AS test'), timeout]);
-    res.json({ ok: true, rows: result.rows, dbUrl: process.env.DATABASE_URL ? 'set' : 'missing' });
+    const count = await Promise.race([prisma.user.count(), timeout]);
+    res.json({ ok: true, count });
   } catch (e) {
-    res.json({ ok: false, error: e.message, code: e.code, dbUrl: process.env.DATABASE_URL ? 'set' : 'missing' });
-  } finally {
-    await pool.end().catch(() => {});
+    res.json({ ok: false, error: e.message, code: e.code });
   }
 });
 
