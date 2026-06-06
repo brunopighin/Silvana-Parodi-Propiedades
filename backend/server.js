@@ -56,69 +56,6 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Reset admin (temporal - borrar después)
-app.get('/api/reset-admin', async (req, res) => {
-  const { Pool } = require('pg');
-  const bcrypt = require('bcryptjs');
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    connectionTimeoutMillis: 5000,
-    ssl: { rejectUnauthorized: false },
-  });
-  const email = process.env.ADMIN_EMAIL || 'admin@silvanaparodi.com.ar';
-  const password = process.env.ADMIN_PASSWORD || 'admin123';
-  try {
-    const hashed = await bcrypt.hash(password, 8);
-    const result = await pool.query(
-      `INSERT INTO "User" (email, password, name, role, "createdAt", "updatedAt")
-       VALUES ($1, $2, 'Silvana Parodi', 'admin', NOW(), NOW())
-       ON CONFLICT (email) DO UPDATE SET password = $2, "updatedAt" = NOW()`,
-      [email, hashed]
-    );
-    await pool.end().catch(() => {});
-    res.json({ ok: true, email, updated: result.rowCount });
-  } catch (e) {
-    res.json({ ok: false, error: e.message });
-  }
-});
-
-// DB test (temporal - borrar después)
-app.get('/api/db-test', async (req, res) => {
-  const t = (ms, msg) => new Promise((_, r) => setTimeout(() => r(new Error(msg)), ms));
-  const steps = [];
-  try {
-    const { PrismaClient } = require('@prisma/client');
-    const { PrismaPg } = require('@prisma/adapter-pg');
-    const { Pool } = require('pg');
-    const version = require('@prisma/client/package.json').version;
-    steps.push('packages_loaded');
-
-    const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      connectionTimeoutMillis: 3000,
-      ssl: { rejectUnauthorized: false },
-    });
-
-    await Promise.race([pool.query('SELECT 1'), t(4000, 'pool_timeout')]);
-    steps.push('pool_ok');
-
-    const adapter = new PrismaPg(pool);
-    const prisma = new PrismaClient({ adapter });
-    steps.push('prisma_created');
-
-    await Promise.race([prisma.$connect(), t(4000, 'connect_timeout')]);
-    steps.push('connect_ok');
-
-    const count = await Promise.race([prisma.user.count(), t(4000, 'query_timeout')]);
-    steps.push('query_ok');
-
-    await pool.end().catch(() => {});
-    res.json({ ok: true, count, version, steps });
-  } catch (e) {
-    res.json({ ok: false, error: e.message, steps });
-  }
-});
-
 // Sitemap dinámico
 app.get('/sitemap.xml', async (req, res) => {
   const prisma = require('./src/lib/prisma');

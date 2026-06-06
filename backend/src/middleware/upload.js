@@ -15,7 +15,6 @@ const MAX_VIDEO_SIZE = 200 * 1024 * 1024; // 200MB
 
 const videosDir = path.join(__dirname, '../../uploads/videos');
 
-// Almacenamiento temporal en memoria
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
@@ -32,8 +31,8 @@ const upload = multer({
   limits: { fileSize: MAX_SIZE },
 });
 
-// Procesar imagen con Sharp: convertir a WebP, redimensionar, optimizar
-const processImage = async (buffer, filename) => {
+// Procesar imagen con Sharp y guardar en disco local
+const processImage = async (buffer) => {
   const uploadsDir = path.join(__dirname, '../../uploads');
   const thumbnailsDir = path.join(uploadsDir, 'thumbnails');
 
@@ -45,13 +44,11 @@ const processImage = async (buffer, filename) => {
   const fullPath = path.join(uploadsDir, name);
   const thumbPath = path.join(thumbnailsDir, thumbName);
 
-  // Imagen principal: max 1920px ancho, calidad 88%
   await sharp(buffer)
     .resize(1920, 1440, { fit: 'inside', withoutEnlargement: true })
     .webp({ quality: 88 })
     .toFile(fullPath);
 
-  // Miniatura: 800x600, calidad 80%
   await sharp(buffer)
     .resize(800, 600, { fit: 'cover' })
     .webp({ quality: 80 })
@@ -64,7 +61,58 @@ const processImage = async (buffer, filename) => {
   };
 };
 
-// Procesar con Cloudinary si está configurado
+// Procesar imagen con Sharp y subir a Supabase Storage
+const processWithSupabase = async (buffer, folder = 'properties') => {
+  const supabaseAdmin = require('../lib/supabase');
+  const bucketName = process.env.SUPABASE_STORAGE_BUCKET;
+
+  const name = `${uuidv4()}.webp`;
+  const thumbName = `thumb_${name}`;
+
+  const mainBuffer = await sharp(buffer)
+    .resize(1920, 1440, { fit: 'inside', withoutEnlargement: true })
+    .webp({ quality: 88 })
+    .toBuffer();
+
+  const thumbBuffer = await sharp(buffer)
+    .resize(800, 600, { fit: 'cover' })
+    .webp({ quality: 80 })
+    .toBuffer();
+
+  const { error: mainError } = await supabaseAdmin.storage
+    .from(bucketName)
+    .upload(`${folder}/${name}`, mainBuffer, {
+      contentType: 'image/webp',
+      upsert: false,
+    });
+
+  if (mainError) throw mainError;
+
+  const { error: thumbError } = await supabaseAdmin.storage
+    .from(bucketName)
+    .upload(`${folder}/thumbnails/${thumbName}`, thumbBuffer, {
+      contentType: 'image/webp',
+      upsert: false,
+    });
+
+  if (thumbError) throw thumbError;
+
+  const { data: mainData } = supabaseAdmin.storage
+    .from(bucketName)
+    .getPublicUrl(`${folder}/${name}`);
+
+  const { data: thumbData } = supabaseAdmin.storage
+    .from(bucketName)
+    .getPublicUrl(`${folder}/thumbnails/${thumbName}`);
+
+  return {
+    url: mainData.publicUrl,
+    thumbnailUrl: thumbData.publicUrl,
+    publicId: `${folder}/${name}`,
+  };
+};
+
+// Procesar con Cloudinary si está configurado (legacy)
 const processWithCloudinary = async (buffer, folder = 'properties') => {
   const cloudinary = require('cloudinary').v2;
 
@@ -99,6 +147,11 @@ const processWithCloudinary = async (buffer, folder = 'properties') => {
   });
 };
 
+const useSupabase = () =>
+  !!(process.env.SUPABASE_URL &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    process.env.SUPABASE_STORAGE_BUCKET);
+
 const useCloudinary = () =>
   !!(process.env.CLOUDINARY_CLOUD_NAME &&
     process.env.CLOUDINARY_API_KEY &&
@@ -109,10 +162,12 @@ const processUploadedImages = async (files, folder = 'properties') => {
 
   for (const file of files) {
     let result;
-    if (useCloudinary()) {
+    if (useSupabase()) {
+      result = await processWithSupabase(file.buffer, folder);
+    } else if (useCloudinary()) {
       result = await processWithCloudinary(file.buffer, folder);
     } else {
-      result = await processImage(file.buffer, file.originalname);
+      result = await processImage(file.buffer);
     }
     results.push(result);
   }
@@ -121,7 +176,20 @@ const processUploadedImages = async (files, folder = 'properties') => {
 };
 
 const deleteImage = async (url, publicId) => {
-  if (useCloudinary() && publicId) {
+  if (useSupabase() && publicId && !publicId.startsWith('http')) {
+    const supabaseAdmin = require('../lib/supabase');
+    const bucketName = process.env.SUPABASE_STORAGE_BUCKET;
+
+    await supabaseAdmin.storage.from(bucketName).remove([publicId]);
+
+    // Eliminar thumbnail
+    const parts = publicId.split('/');
+    const filename = parts.pop();
+    const folder = parts.join('/');
+    const thumbId = `${folder}/thumbnails/thumb_${filename}`;
+    await supabaseAdmin.storage.from(bucketName).remove([thumbId]);
+
+  } else if (useCloudinary() && publicId) {
     const cloudinary = require('cloudinary').v2;
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -129,7 +197,7 @@ const deleteImage = async (url, publicId) => {
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
     await cloudinary.uploader.destroy(publicId);
-  } else if (url) {
+  } else if (url && url.startsWith('/uploads/')) {
     const filename = path.basename(url);
     const fullPath = path.join(__dirname, '../../uploads', filename);
     const thumbPath = path.join(__dirname, '../../uploads/thumbnails', `thumb_${filename}`);

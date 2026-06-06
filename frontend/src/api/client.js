@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { supabase } from '../lib/supabase';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -7,24 +8,23 @@ const api = axios.create({
   timeout: 30000,
 });
 
-// Interceptor: agregar token JWT a cada request
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Interceptor: agregar token de sesión Supabase a cada request
+api.interceptors.request.use(async (config) => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.access_token) {
+    config.headers.Authorization = `Bearer ${session.access_token}`;
   }
   return config;
 });
 
-// Interceptor: manejar 401 (sesión expirada)
+// Interceptor: manejar 401 (sesión expirada o inválida)
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
       const isAdminRoute = window.location.pathname.startsWith('/admin');
       if (isAdminRoute && window.location.pathname !== '/admin/login') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        await supabase.auth.signOut();
         window.location.href = '/admin/login';
       }
     }
@@ -90,7 +90,6 @@ export const settingsApi = {
 
 // Auth
 export const authApi = {
-  login: (credentials) => api.post('/auth/login', credentials),
   me: () => api.get('/auth/me'),
   changePassword: (data) => api.put('/auth/change-password', data),
   updateProfile: (data) => api.put('/auth/profile', data),

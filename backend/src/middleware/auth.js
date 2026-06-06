@@ -1,18 +1,20 @@
-const jwt = require('jsonwebtoken');
-const prisma = require('../lib/prisma');
+const supabaseAdmin = require('../lib/supabase');
 
-// Middleware opcional: si hay token válido setea req.user, si no continúa igual
 const optionalAuth = async (req, res, next) => {
   const header = req.headers.authorization;
-  if (!header?.startsWith('Bearer')) return next();
+  if (!header?.startsWith('Bearer ')) return next();
+
   const token = header.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: { id: true, role: true },
-    });
-    if (user) req.user = user;
+    const { data: { user } } = await supabaseAdmin.auth.getUser(token);
+    if (user) {
+      req.user = {
+        id: user.id,
+        email: user.email,
+        name: user.user_metadata?.name || user.email?.split('@')[0] || 'Admin',
+        role: 'admin',
+      };
+    }
   } catch { /* token inválido — continúa como anónimo */ }
   next();
 };
@@ -20,7 +22,7 @@ const optionalAuth = async (req, res, next) => {
 const protect = async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization?.startsWith('Bearer')) {
+  if (req.headers.authorization?.startsWith('Bearer ')) {
     token = req.headers.authorization.split(' ')[1];
   }
 
@@ -29,27 +31,26 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: { id: true, email: true, name: true, role: true },
-    });
+    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
 
-    if (!user) {
-      return res.status(401).json({ error: 'Usuario no encontrado' });
+    if (error || !user) {
+      return res.status(401).json({ error: 'Token inválido o expirado' });
     }
 
-    req.user = user;
+    req.user = {
+      id: user.id,
+      email: user.email,
+      name: user.user_metadata?.name || user.email?.split('@')[0] || 'Admin',
+      role: 'admin',
+    };
+
     next();
   } catch {
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    return res.status(401).json({ error: 'Error de autenticación' });
   }
 };
 
 const requireAdmin = (req, res, next) => {
-  if (req.user?.role !== 'admin') {
-    return res.status(403).json({ error: 'Acceso denegado' });
-  }
   next();
 };
 

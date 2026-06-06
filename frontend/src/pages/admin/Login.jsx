@@ -20,7 +20,14 @@ export default function AdminLogin() {
       await login(email, password);
       navigate('/admin');
     } catch (err) {
-      setError(err.response?.data?.error || 'Credenciales incorrectas');
+      const msg = err?.message || '';
+      if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials')) {
+        setError('Email o contraseña incorrectos');
+      } else if (msg.includes('Email not confirmed')) {
+        setError('El email no fue confirmado en Supabase');
+      } else {
+        setError(msg || 'Credenciales incorrectas');
+      }
     } finally {
       setLoading(false);
     }
