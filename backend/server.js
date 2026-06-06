@@ -87,7 +87,7 @@ app.get('/api/db-test', async (req, res) => {
   const t = (ms, msg) => new Promise((_, r) => setTimeout(() => r(new Error(msg)), ms));
   const steps = [];
   try {
-    const { PrismaClient } = require('./src/generated/prisma');
+    const { PrismaClient } = require('@prisma/client');
     const { PrismaPg } = require('@prisma/adapter-pg');
     const { Pool } = require('pg');
     const version = require('@prisma/client/package.json').version;
