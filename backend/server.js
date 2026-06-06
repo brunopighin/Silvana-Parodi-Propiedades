@@ -62,6 +62,25 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Reset admin (temporal - borrar después)
+app.get('/api/reset-admin', async (req, res) => {
+  const prisma = require('./src/lib/prisma');
+  const bcrypt = require('bcryptjs');
+  const email = process.env.ADMIN_EMAIL || 'admin@silvanaparodi.com.ar';
+  const password = process.env.ADMIN_PASSWORD || 'admin123';
+  try {
+    const hashed = await bcrypt.hash(password, 10);
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: { password: hashed, name: 'Silvana Parodi', role: 'admin' },
+      create: { email, password: hashed, name: 'Silvana Parodi', role: 'admin' },
+    });
+    res.json({ ok: true, email: user.email });
+  } catch (e) {
+    res.json({ ok: false, error: e.message });
+  }
+});
+
 // DB test (temporal - borrar después)
 app.get('/api/db-test', async (req, res) => {
   const t = (ms, msg) => new Promise((_, r) => setTimeout(() => r(new Error(msg)), ms));
