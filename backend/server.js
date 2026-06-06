@@ -56,6 +56,20 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// DB test (temporal - borrar después)
+app.get('/api/db-test', async (req, res) => {
+  const { PrismaClient } = require('@prisma/client');
+  const prisma = new PrismaClient();
+  try {
+    const count = await prisma.user.count();
+    res.json({ ok: true, count });
+  } catch (e) {
+    res.json({ ok: false, error: e.message, code: e.code });
+  } finally {
+    await prisma.$disconnect();
+  }
+});
+
 // Sitemap dinámico
 app.get('/sitemap.xml', async (req, res) => {
   const { PrismaClient } = require('@prisma/client');
