@@ -1,0 +1,297 @@
+
+Object.defineProperty(exports, "__esModule", { value: true });
+
+const {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+  PrismaClientRustPanicError,
+  PrismaClientInitializationError,
+  PrismaClientValidationError,
+  NotFoundError,
+  getPrismaClient,
+  sqltag,
+  empty,
+  join,
+  raw,
+  skip,
+  Decimal,
+  Debug,
+  objectEnumValues,
+  makeStrictEnum,
+  Extensions,
+  warnOnce,
+  defineDmmfProperty,
+  Public,
+  getRuntime
+} = require('./runtime/wasm.js')
+
+
+const Prisma = {}
+
+exports.Prisma = Prisma
+exports.$Enums = {}
+
+/**
+ * Prisma Client JS version: 5.22.0
+ * Query Engine version: 605197351a3c8bdd595af2d2a9bc3025bca48ea2
+ */
+Prisma.prismaVersion = {
+  client: "5.22.0",
+  engine: "605197351a3c8bdd595af2d2a9bc3025bca48ea2"
+}
+
+Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
+Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
+Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
+Prisma.PrismaClientInitializationError = PrismaClientInitializationError
+Prisma.PrismaClientValidationError = PrismaClientValidationError
+Prisma.NotFoundError = NotFoundError
+Prisma.Decimal = Decimal
+
+/**
+ * Re-export of sql-template-tag
+ */
+Prisma.sql = sqltag
+Prisma.empty = empty
+Prisma.join = join
+Prisma.raw = raw
+Prisma.validator = Public.validator
+
+/**
+* Extensions
+*/
+Prisma.getExtensionContext = Extensions.getExtensionContext
+Prisma.defineExtension = Extensions.defineExtension
+
+/**
+ * Shorthand utilities for JSON filtering
+ */
+Prisma.DbNull = objectEnumValues.instances.DbNull
+Prisma.JsonNull = objectEnumValues.instances.JsonNull
+Prisma.AnyNull = objectEnumValues.instances.AnyNull
+
+Prisma.NullTypes = {
+  DbNull: objectEnumValues.classes.DbNull,
+  JsonNull: objectEnumValues.classes.JsonNull,
+  AnyNull: objectEnumValues.classes.AnyNull
+}
+
+
+
+
+
+/**
+ * Enums
+ */
+exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
+  Serializable: 'Serializable'
+});
+
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  password: 'password',
+  name: 'name',
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PropertyScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  price: 'price',
+  currency: 'currency',
+  operation: 'operation',
+  type: 'type',
+  status: 'status',
+  featured: 'featured',
+  isNew: 'isNew',
+  address: 'address',
+  city: 'city',
+  province: 'province',
+  neighborhood: 'neighborhood',
+  zipCode: 'zipCode',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  totalArea: 'totalArea',
+  coveredArea: 'coveredArea',
+  rooms: 'rooms',
+  bedrooms: 'bedrooms',
+  bathrooms: 'bathrooms',
+  toilets: 'toilets',
+  garage: 'garage',
+  garageSpaces: 'garageSpaces',
+  pool: 'pool',
+  acceptsTradeIn: 'acceptsTradeIn',
+  aptaCredito: 'aptaCredito',
+  garden: 'garden',
+  terrace: 'terrace',
+  balcony: 'balcony',
+  amenities: 'amenities',
+  services: 'services',
+  expenses: 'expenses',
+  expensesCurrency: 'expensesCurrency',
+  yearBuilt: 'yearBuilt',
+  floors: 'floors',
+  floor: 'floor',
+  orientation: 'orientation',
+  condition: 'condition',
+  videoUrl: 'videoUrl',
+  views: 'views',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  thumbnailUrl: 'thumbnailUrl',
+  publicId: 'publicId',
+  order: 'order',
+  isMain: 'isMain',
+  propertyId: 'propertyId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InquiryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  message: 'message',
+  propertyId: 'propertyId',
+  read: 'read',
+  archived: 'archived',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TestimonialScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  text: 'text',
+  rating: 'rating',
+  photo: 'photo',
+  role: 'role',
+  active: 'active',
+  order: 'order',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SettingScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+
+exports.Prisma.ModelName = {
+  User: 'User',
+  Property: 'Property',
+  Image: 'Image',
+  Inquiry: 'Inquiry',
+  Testimonial: 'Testimonial',
+  Setting: 'Setting'
+};
+/**
+ * Create the Client
+ */
+const config = {
+  "generator": {
+    "name": "client",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "C:\\Users\\bruno\\inmobiliaria-pro\\backend\\src\\generated\\prisma",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "library"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "windows",
+        "native": true
+      }
+    ],
+    "previewFeatures": [
+      "driverAdapters"
+    ],
+    "sourceFilePath": "C:\\Users\\bruno\\inmobiliaria-pro\\backend\\prisma\\schema.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": "../../../.env",
+    "schemaEnvPath": "../../../.env"
+  },
+  "relativePath": "../../../prisma",
+  "clientVersion": "5.22.0",
+  "engineVersion": "605197351a3c8bdd595af2d2a9bc3025bca48ea2",
+  "datasourceNames": [
+    "db"
+  ],
+  "activeProvider": "postgresql",
+  "postinstall": false,
+  "inlineDatasources": {
+    "db": {
+      "url": {
+        "fromEnvVar": "DATABASE_URL",
+        "value": null
+      }
+    }
+  },
+  "inlineSchema": "generator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../src/generated/prisma\"\n  previewFeatures = [\"driverAdapters\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  email     String   @unique\n  password  String\n  name      String\n  role      String   @default(\"admin\")\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Property {\n  id               Int       @id @default(autoincrement())\n  title            String\n  slug             String    @unique\n  description      String\n  price            Float?\n  currency         String    @default(\"ARS\")\n  operation        String // venta, alquiler, alquiler-temporario\n  type             String // casa, departamento, ph, local, oficina, terreno, galpon, campo, cochera\n  status           String    @default(\"disponible\") // disponible, vendido, alquilado, reservado\n  featured         Boolean   @default(false)\n  isNew            Boolean   @default(false)\n  address          String\n  city             String\n  province         String    @default(\"Buenos Aires\")\n  neighborhood     String?\n  zipCode          String?\n  latitude         Float?\n  longitude        Float?\n  totalArea        Float?\n  coveredArea      Float?\n  rooms            Int?\n  bedrooms         Int?\n  bathrooms        Int?\n  toilets          Int?\n  garage           Boolean   @default(false)\n  garageSpaces     Int?\n  pool             Boolean   @default(false)\n  acceptsTradeIn   Boolean   @default(false)\n  aptaCredito      Boolean   @default(false)\n  garden           Boolean   @default(false)\n  terrace          Boolean   @default(false)\n  balcony          Boolean   @default(false)\n  amenities        String?\n  services         String?\n  expenses         Float?\n  expensesCurrency String    @default(\"ARS\")\n  yearBuilt        Int?\n  floors           Int?\n  floor            Int?\n  orientation      String?\n  condition        String? // excelente, muy-bueno, bueno, a-refaccionar\n  videoUrl         String?\n  views            Int       @default(0)\n  images           Image[]\n  inquiries        Inquiry[]\n  createdAt        DateTime  @default(now())\n  updatedAt        DateTime  @updatedAt\n}\n\nmodel Image {\n  id           Int      @id @default(autoincrement())\n  url          String\n  thumbnailUrl String?\n  publicId     String?\n  order        Int      @default(0)\n  isMain       Boolean  @default(false)\n  propertyId   Int\n  property     Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)\n  createdAt    DateTime @default(now())\n}\n\nmodel Inquiry {\n  id         Int       @id @default(autoincrement())\n  name       String\n  email      String\n  phone      String?\n  message    String\n  propertyId Int?\n  property   Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)\n  read       Boolean   @default(false)\n  archived   Boolean   @default(false)\n  createdAt  DateTime  @default(now())\n}\n\nmodel Testimonial {\n  id        Int      @id @default(autoincrement())\n  name      String\n  text      String\n  rating    Int      @default(5)\n  photo     String?\n  role      String?\n  active    Boolean  @default(true)\n  order     Int      @default(0)\n  createdAt DateTime @default(now())\n}\n\nmodel Setting {\n  id        Int      @id @default(autoincrement())\n  key       String   @unique\n  value     String\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "ba679388e2ac711a830b53a1f364a44c00f76c958a87b7efe3b5c3956e94a200",
+  "copyEngine": true
+}
+config.dirname = '/'
+
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Property\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"price\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"operation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"featured\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isNew\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"province\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"neighborhood\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"zipCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"latitude\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"longitude\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"totalArea\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"coveredArea\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"rooms\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bedrooms\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bathrooms\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"toilets\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"garage\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"garageSpaces\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"pool\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"acceptsTradeIn\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"aptaCredito\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"garden\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"terrace\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"balcony\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"amenities\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"services\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expenses\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"expensesCurrency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"yearBuilt\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"floors\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"floor\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"orientation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"condition\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"videoUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"views\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"images\",\"kind\":\"object\",\"type\":\"Image\",\"relationName\":\"ImageToProperty\"},{\"name\":\"inquiries\",\"kind\":\"object\",\"type\":\"Inquiry\",\"relationName\":\"InquiryToProperty\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Image\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"thumbnailUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publicId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"isMain\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"propertyId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"property\",\"kind\":\"object\",\"type\":\"Property\",\"relationName\":\"ImageToProperty\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Inquiry\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"propertyId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"property\",\"kind\":\"object\",\"type\":\"Property\",\"relationName\":\"InquiryToProperty\"},{\"name\":\"read\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"archived\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Testimonial\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"text\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"rating\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"photo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Setting\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
+config.engineWasm = {
+  getRuntime: () => require('./query_engine_bg.js'),
+  getQueryEngineWasmModule: async () => {
+    const loader = (await import('#wasm-engine-loader')).default
+    const engine = (await loader).default
+    return engine 
+  }
+}
+
+config.injectableEdgeEnv = () => ({
+  parsed: {
+    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
+  }
+})
+
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
+}
+
+const PrismaClient = getPrismaClient(config)
+exports.PrismaClient = PrismaClient
+Object.assign(exports, Prisma)
+

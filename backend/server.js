@@ -1,10 +1,4 @@
 require('dotenv').config();
-const { execSync } = require('child_process');
-try {
-  execSync('npx prisma generate', { stdio: 'inherit', cwd: __dirname });
-} catch (e) {
-  console.error('prisma generate falló:', e.message);
-}
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -64,7 +58,7 @@ app.get('/api/health', (req, res) => {
 
 // Reset admin (temporal - borrar después)
 app.get('/api/reset-admin', async (req, res) => {
-  const { PrismaClient } = require('@prisma/client');
+  const { PrismaClient } = require('./src/generated/prisma');
   const { PrismaPg } = require('@prisma/adapter-pg');
   const { Pool } = require('pg');
   const bcrypt = require('bcryptjs');
@@ -100,7 +94,7 @@ app.get('/api/db-test', async (req, res) => {
   const t = (ms, msg) => new Promise((_, r) => setTimeout(() => r(new Error(msg)), ms));
   const steps = [];
   try {
-    const { PrismaClient } = require('@prisma/client');
+    const { PrismaClient } = require('./src/generated/prisma');
     const { PrismaPg } = require('@prisma/adapter-pg');
     const { Pool } = require('pg');
     const version = require('@prisma/client/package.json').version;
