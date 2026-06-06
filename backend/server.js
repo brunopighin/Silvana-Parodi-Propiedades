@@ -58,22 +58,18 @@ app.get('/api/health', (req, res) => {
 
 // DB test (temporal - borrar después)
 app.get('/api/db-test', async (req, res) => {
-  const { PrismaClient } = require('@prisma/client');
-  const prisma = new PrismaClient();
+  const prisma = require('./src/lib/prisma');
   try {
     const count = await prisma.user.count();
     res.json({ ok: true, count });
   } catch (e) {
     res.json({ ok: false, error: e.message, code: e.code });
-  } finally {
-    await prisma.$disconnect();
   }
 });
 
 // Sitemap dinámico
 app.get('/sitemap.xml', async (req, res) => {
-  const { PrismaClient } = require('@prisma/client');
-  const prisma = new PrismaClient();
+  const prisma = require('./src/lib/prisma');
   const base = process.env.SITE_URL || 'https://www.silvanaparodi.com.ar';
   const today = new Date().toISOString().split('T')[0];
 

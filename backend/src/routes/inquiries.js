@@ -1,9 +1,8 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../lib/prisma');
 const { protect, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // POST /api/inquiries - Crear consulta (público)
 router.post('/', async (req, res) => {

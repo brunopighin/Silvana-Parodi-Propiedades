@@ -1,0 +1,11 @@
+DATABASE_URL=postgresql://postgres.qdvfqsbwspgjnezlmciz:Zx271990xz%21@aws-1-us-east-2.pooler.supabase.com:6543/postgres?pgbouncer=true
+DIRECT_URL=postgresql://postgres.qdvfqsbwspgjnezlmciz:Zx271990xz%21@aws-1-us-east-2.pooler.supabase.com:5432/postgres
+NODE_ENV=production
+PORT=3001
+JWT_SECRET=silvana-parodi-propiedades-jwt-secret-2025-produccion
+JWT_EXPIRES_IN=7d
+ADMIN_EMAIL=silvanaparodi.propiedades@gmail.com
+ADMIN_PASSWORD=SilvanaParodi2025
+FRONTEND_URL=https://www.silvanaparopiedades.com
+SITE_URL=https://www.silvanaparopiedades.com
+WHATSAPP_NUMBER=5492323537248
