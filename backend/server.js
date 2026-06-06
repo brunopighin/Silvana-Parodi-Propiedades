@@ -64,17 +64,31 @@ app.get('/api/health', (req, res) => {
 
 // Reset admin (temporal - borrar después)
 app.get('/api/reset-admin', async (req, res) => {
-  const prisma = require('./src/lib/prisma');
+  const { PrismaClient } = require('@prisma/client');
+  const { PrismaPg } = require('@prisma/adapter-pg');
+  const { Pool } = require('pg');
   const bcrypt = require('bcryptjs');
+  const t = (ms) => new Promise((_, r) => setTimeout(() => r(new Error('Timeout')), ms));
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    connectionTimeoutMillis: 3000,
+    ssl: { rejectUnauthorized: false },
+  });
+  const adapter = new PrismaPg(pool);
+  const prisma = new PrismaClient({ adapter });
   const email = process.env.ADMIN_EMAIL || 'admin@silvanaparodi.com.ar';
   const password = process.env.ADMIN_PASSWORD || 'admin123';
   try {
     const hashed = await bcrypt.hash(password, 10);
-    const user = await prisma.user.upsert({
-      where: { email },
-      update: { password: hashed, name: 'Silvana Parodi', role: 'admin' },
-      create: { email, password: hashed, name: 'Silvana Parodi', role: 'admin' },
-    });
+    const user = await Promise.race([
+      prisma.user.upsert({
+        where: { email },
+        update: { password: hashed, name: 'Silvana Parodi', role: 'admin' },
+        create: { email, password: hashed, name: 'Silvana Parodi', role: 'admin' },
+      }),
+      t(8000),
+    ]);
+    await pool.end().catch(() => {});
     res.json({ ok: true, email: user.email });
   } catch (e) {
     res.json({ ok: false, error: e.message });
