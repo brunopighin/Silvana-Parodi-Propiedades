@@ -58,32 +58,25 @@ app.get('/api/health', (req, res) => {
 
 // Reset admin (temporal - borrar después)
 app.get('/api/reset-admin', async (req, res) => {
-  const { PrismaClient } = require('./src/generated/prisma');
-  const { PrismaPg } = require('@prisma/adapter-pg');
   const { Pool } = require('pg');
   const bcrypt = require('bcryptjs');
-  const t = (ms) => new Promise((_, r) => setTimeout(() => r(new Error('Timeout')), ms));
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    connectionTimeoutMillis: 3000,
+    connectionTimeoutMillis: 5000,
     ssl: { rejectUnauthorized: false },
   });
-  const adapter = new PrismaPg(pool);
-  const prisma = new PrismaClient({ adapter });
   const email = process.env.ADMIN_EMAIL || 'admin@silvanaparodi.com.ar';
   const password = process.env.ADMIN_PASSWORD || 'admin123';
   try {
-    const hashed = await bcrypt.hash(password, 10);
-    const user = await Promise.race([
-      prisma.user.upsert({
-        where: { email },
-        update: { password: hashed, name: 'Silvana Parodi', role: 'admin' },
-        create: { email, password: hashed, name: 'Silvana Parodi', role: 'admin' },
-      }),
-      t(8000),
-    ]);
+    const hashed = await bcrypt.hash(password, 8);
+    const result = await pool.query(
+      `INSERT INTO "User" (email, password, name, role, "createdAt", "updatedAt")
+       VALUES ($1, $2, 'Silvana Parodi', 'admin', NOW(), NOW())
+       ON CONFLICT (email) DO UPDATE SET password = $2, "updatedAt" = NOW()`,
+      [email, hashed]
+    );
     await pool.end().catch(() => {});
-    res.json({ ok: true, email: user.email });
+    res.json({ ok: true, email, updated: result.rowCount });
   } catch (e) {
     res.json({ ok: false, error: e.message });
   }
