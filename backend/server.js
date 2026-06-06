@@ -63,7 +63,7 @@ app.get('/api/db-test', async (req, res) => {
     const count = await prisma.user.count();
     res.json({ ok: true, count });
   } catch (e) {
-    res.json({ ok: false, error: e.message, code: e.code });
+    res.json({ ok: false, error: e.message, code: e.code, type: e.constructor.name });
   }
 });
 
