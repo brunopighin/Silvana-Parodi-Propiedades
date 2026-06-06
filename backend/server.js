@@ -1,4 +1,10 @@
 require('dotenv').config();
+const { execSync } = require('child_process');
+try {
+  execSync('npx prisma generate', { stdio: 'inherit', cwd: __dirname });
+} catch (e) {
+  console.error('prisma generate falló:', e.message);
+}
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
