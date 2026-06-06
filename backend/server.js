@@ -64,15 +64,38 @@ app.get('/api/health', (req, res) => {
 
 // DB test (temporal - borrar después)
 app.get('/api/db-test', async (req, res) => {
-  const prisma = require('./src/lib/prisma');
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Timeout: Prisma no respondió en 6s')), 6000)
-  );
+  const t = (ms, msg) => new Promise((_, r) => setTimeout(() => r(new Error(msg)), ms));
+  const steps = [];
   try {
-    const count = await Promise.race([prisma.user.count(), timeout]);
-    res.json({ ok: true, count });
+    const { PrismaClient } = require('@prisma/client');
+    const { PrismaPg } = require('@prisma/adapter-pg');
+    const { Pool } = require('pg');
+    const version = require('@prisma/client/package.json').version;
+    steps.push('packages_loaded');
+
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      connectionTimeoutMillis: 3000,
+      ssl: { rejectUnauthorized: false },
+    });
+
+    await Promise.race([pool.query('SELECT 1'), t(4000, 'pool_timeout')]);
+    steps.push('pool_ok');
+
+    const adapter = new PrismaPg(pool);
+    const prisma = new PrismaClient({ adapter });
+    steps.push('prisma_created');
+
+    await Promise.race([prisma.$connect(), t(4000, 'connect_timeout')]);
+    steps.push('connect_ok');
+
+    const count = await Promise.race([prisma.user.count(), t(4000, 'query_timeout')]);
+    steps.push('query_ok');
+
+    await pool.end().catch(() => {});
+    res.json({ ok: true, count, version, steps });
   } catch (e) {
-    res.json({ ok: false, error: e.message, code: e.code });
+    res.json({ ok: false, error: e.message, steps });
   }
 });
 
