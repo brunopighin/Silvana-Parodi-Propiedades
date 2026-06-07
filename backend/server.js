@@ -1,4 +1,23 @@
 require('dotenv').config();
+
+// Validación temprana de variables de entorno críticas — si falta alguna,
+// el proceso lo informa con claridad antes de que createClient() de Supabase
+// crashee de forma silenciosa (Error: supabaseUrl is required).
+const REQUIRED_ENV_VARS = [
+  'DATABASE_URL',
+  'DIRECT_URL',
+  'SUPABASE_URL',
+  'SUPABASE_SERVICE_ROLE_KEY',
+  'SUPABASE_ANON_KEY',
+];
+const missingEnvVars = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
+if (missingEnvVars.length > 0) {
+  console.error(`❌ Variables de entorno faltantes o vacías: ${missingEnvVars.join(', ')}`);
+  console.error('El servidor no puede iniciar sin estas variables. Revisá la configuración del hosting.');
+  process.exit(1);
+}
+console.log(`✅ Variables de entorno OK (${REQUIRED_ENV_VARS.length} verificadas)`);
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
