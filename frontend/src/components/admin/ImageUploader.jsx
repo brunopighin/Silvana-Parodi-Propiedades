@@ -48,9 +48,8 @@ export default function ImageUploader({ propertyId, images, onImagesChange }) {
 
     setUploading(true);
     try {
-      const formData = new FormData();
-      toUpload.forEach(({ file }) => formData.append('images', file));
-      const { data } = await propertiesApi.uploadImages(propertyId, formData);
+      const files = toUpload.map(({ file }) => file);
+      const { data } = await propertiesApi.uploadImages(propertyId, files);
       toUpload.forEach(({ hash }) => uploadedHashes.current.add(hash));
       onImagesChange([...images, ...data]);
     } catch (err) {
