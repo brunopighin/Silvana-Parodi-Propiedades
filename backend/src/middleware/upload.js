@@ -64,54 +64,30 @@ const processImage = async (buffer) => {
   };
 };
 
-// Procesar imagen con Sharp y subir a Supabase Storage
-const processWithSupabase = async (buffer, folder = 'properties') => {
+// Subir imagen directamente a Supabase Storage sin procesar con Sharp.
+// En hosting compartido Sharp crea threads del SO que agotan el límite LVE.
+// El redimensionado/conversión se delega a Cloudinary cuando esté configurado.
+const processWithSupabase = async (buffer, folder = 'properties', mimetype = 'image/jpeg') => {
   const supabaseAdmin = require('../lib/supabase');
   const bucketName = process.env.SUPABASE_STORAGE_BUCKET;
 
-  const name = `${uuidv4()}.webp`;
-  const thumbName = `thumb_${name}`;
+  const extMap = { 'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+  const ext = extMap[mimetype] || 'jpg';
+  const name = `${uuidv4()}.${ext}`;
+  const path = `${folder}/${name}`;
 
-  const mainBuffer = await sharp(buffer)
-    .resize(1920, 1440, { fit: 'inside', withoutEnlargement: true })
-    .webp({ quality: 88 })
-    .toBuffer();
-
-  const thumbBuffer = await sharp(buffer)
-    .resize(800, 600, { fit: 'cover' })
-    .webp({ quality: 80 })
-    .toBuffer();
-
-  const { error: mainError } = await supabaseAdmin.storage
+  const { error } = await supabaseAdmin.storage
     .from(bucketName)
-    .upload(`${folder}/${name}`, mainBuffer, {
-      contentType: 'image/webp',
-      upsert: false,
-    });
+    .upload(path, buffer, { contentType: mimetype, upsert: false });
 
-  if (mainError) throw mainError;
+  if (error) throw error;
 
-  const { error: thumbError } = await supabaseAdmin.storage
-    .from(bucketName)
-    .upload(`${folder}/thumbnails/${thumbName}`, thumbBuffer, {
-      contentType: 'image/webp',
-      upsert: false,
-    });
-
-  if (thumbError) throw thumbError;
-
-  const { data: mainData } = supabaseAdmin.storage
-    .from(bucketName)
-    .getPublicUrl(`${folder}/${name}`);
-
-  const { data: thumbData } = supabaseAdmin.storage
-    .from(bucketName)
-    .getPublicUrl(`${folder}/thumbnails/${thumbName}`);
+  const { data } = supabaseAdmin.storage.from(bucketName).getPublicUrl(path);
 
   return {
-    url: mainData.publicUrl,
-    thumbnailUrl: thumbData.publicUrl,
-    publicId: `${folder}/${name}`,
+    url: data.publicUrl,
+    thumbnailUrl: data.publicUrl,
+    publicId: path,
   };
 };
 
@@ -170,7 +146,7 @@ const processUploadedImages = async (files, folder = 'properties') => {
     if (useCloudinary()) {
       result = await processWithCloudinary(file.buffer, folder);
     } else if (useSupabase()) {
-      result = await processWithSupabase(file.buffer, folder);
+      result = await processWithSupabase(file.buffer, folder, file.mimetype);
     } else {
       result = await processImage(file.buffer);
     }
