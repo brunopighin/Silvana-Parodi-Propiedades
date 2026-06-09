@@ -1,14 +1,11 @@
 const multer = require('multer');
 const path = require('path');
-const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
-// Limitar threads de Sharp al mínimo para hosting compartido
-sharp.concurrency(1);
-// Deshabilitar caché interno de libvips: sin esto los threads quedan retenidos
-// entre operaciones y se acumulan cuando se suben varias imágenes seguidas
-sharp.cache(false);
+// Sharp NO se carga al arranque — solo se require() dentro de processImage (desarrollo local).
+// En producción se usa Cloudinary o Supabase Storage; cargar Sharp inicializa
+// libvips y crea ~8 threads del SO aunque no se procese ninguna imagen.
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
@@ -34,8 +31,11 @@ const upload = multer({
   limits: { fileSize: MAX_SIZE },
 });
 
-// Procesar imagen con Sharp y guardar en disco local
+// Procesar imagen con Sharp y guardar en disco local (solo desarrollo)
 const processImage = async (buffer) => {
+  const sharp = require('sharp');
+  sharp.concurrency(1);
+  sharp.cache(false);
   const uploadsDir = path.join(__dirname, '../../uploads');
   const thumbnailsDir = path.join(uploadsDir, 'thumbnails');
 
