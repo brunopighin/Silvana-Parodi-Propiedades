@@ -24,22 +24,40 @@ const DEFAULT_SETTINGS = {
 };
 
 let cachedSettings = null;
+let pendingSettings = null; // promesa compartida — todos los useSettings() que montan al mismo tiempo esperan la misma request
 
 export function useSettings() {
   const [settings, setSettings] = useState(cachedSettings || DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(!cachedSettings);
 
   useEffect(() => {
-    if (cachedSettings) return;
-    settingsApi.getAll()
-      .then(({ data }) => {
-        cachedSettings = { ...DEFAULT_SETTINGS, ...data };
-        setSettings(cachedSettings);
-      })
-      .catch(() => {
-        cachedSettings = DEFAULT_SETTINGS;
-      })
-      .finally(() => setLoading(false));
+    if (cachedSettings) {
+      setSettings(cachedSettings);
+      setLoading(false);
+      return;
+    }
+
+    if (!pendingSettings) {
+      pendingSettings = settingsApi.getAll()
+        .then(({ data }) => {
+          cachedSettings = { ...DEFAULT_SETTINGS, ...data };
+          return cachedSettings;
+        })
+        .catch(() => {
+          cachedSettings = { ...DEFAULT_SETTINGS };
+          return cachedSettings;
+        });
+    }
+
+    let cancelled = false;
+    pendingSettings.then((resolved) => {
+      if (!cancelled) {
+        setSettings(resolved);
+        setLoading(false);
+      }
+    });
+
+    return () => { cancelled = true; };
   }, []);
 
   return { settings, loading };

@@ -11,6 +11,10 @@ backend/prisma/dev.db
 backend/prisma/dev.db-journal
 backend/prisma/*.db
 
+# Prisma generated client (se regenera con postinstall)
+backend/node_modules/.prisma/
+backend/src/generated/
+
 # Uploaded files
 backend/uploads/*
 !backend/uploads/.gitkeep

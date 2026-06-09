@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { inquiriesApi } from '../../api/client';
 
@@ -16,13 +16,18 @@ export default function AdminLayout({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    inquiriesApi.getStats()
-      .then(({ data }) => setUnreadCount(data.unread || 0))
-      .catch(() => {});
-  }, [location.pathname]);
+    const fetchUnread = () => {
+      inquiriesApi.getStats()
+        .then(({ data }) => setUnreadCount(data.unread || 0))
+        .catch(() => {});
+    };
+    fetchUnread();
+    // Refrescar badge de consultas cada 2 min en lugar de en cada navegación
+    const interval = setInterval(fetchUnread, 120000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = async () => {
     await logout();

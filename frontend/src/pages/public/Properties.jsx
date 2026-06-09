@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import PropertyCard from '../../components/ui/PropertyCard';
@@ -22,6 +22,10 @@ export default function Properties() {
   const [pagination, setPagination] = useState({ total: 0, page: 1, pages: 1 });
   const [loading, setLoading] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  // Estado local del input de búsqueda: se actualiza en cada tecla pero solo
+  // propaga al URL (y dispara el fetch) 400ms después de que el usuario para de tipear.
+  const [searchDraft, setSearchDraft] = useState('');
+  const searchDebounceRef = useRef(null);
 
   const getParams = useCallback(() => ({
     operation: searchParams.get('operation') || '',
@@ -57,7 +61,20 @@ export default function Properties() {
     setSearchParams(current);
   };
 
-  const clearAll = () => setSearchParams({});
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchDraft(val);
+    // Esperar 400ms desde la última tecla antes de actualizar la URL y disparar el fetch
+    clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => updateParam('search', val), 400);
+  };
+
+  // Sincronizar el draft si la URL cambia por otra vía (limpiar filtros, back/forward)
+  useEffect(() => {
+    setSearchDraft(searchParams.get('search') || '');
+  }, [searchParams]);
+
+  const clearAll = () => { setSearchDraft(''); setSearchParams({}); };
 
   const params = getParams();
   const hasFilters = !!(params.operation || params.type || params.city || params.minPrice || params.maxPrice || params.rooms);
@@ -94,13 +111,13 @@ export default function Properties() {
             <input
               type="text"
               placeholder="Buscar por título, dirección, barrio..."
-              value={params.search}
-              onChange={(e) => updateParam('search', e.target.value)}
+              value={searchDraft}
+              onChange={handleSearchChange}
               className="w-full pl-12 pr-10 py-3.5 border border-gray-200 rounded-2xl bg-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
-            {params.search && (
+            {searchDraft && (
               <button
-                onClick={() => updateParam('search', '')}
+                onClick={() => { setSearchDraft(''); updateParam('search', ''); }}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">

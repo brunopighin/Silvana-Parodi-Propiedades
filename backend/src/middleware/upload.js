@@ -4,8 +4,11 @@ const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
-// Limitar threads de Sharp para hosting compartido
+// Limitar threads de Sharp al mínimo para hosting compartido
 sharp.concurrency(1);
+// Deshabilitar caché interno de libvips: sin esto los threads quedan retenidos
+// entre operaciones y se acumulan cuando se suben varias imágenes seguidas
+sharp.cache(false);
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
@@ -162,10 +165,12 @@ const processUploadedImages = async (files, folder = 'properties') => {
 
   for (const file of files) {
     let result;
-    if (useSupabase()) {
-      result = await processWithSupabase(file.buffer, folder);
-    } else if (useCloudinary()) {
+    // Cloudinary primero: el redimensionado ocurre en la nube, sin procesar
+    // con Sharp localmente, evitando el error "glib: Error creating thread".
+    if (useCloudinary()) {
       result = await processWithCloudinary(file.buffer, folder);
+    } else if (useSupabase()) {
+      result = await processWithSupabase(file.buffer, folder);
     } else {
       result = await processImage(file.buffer);
     }
@@ -176,20 +181,9 @@ const processUploadedImages = async (files, folder = 'properties') => {
 };
 
 const deleteImage = async (url, publicId) => {
-  if (useSupabase() && publicId && !publicId.startsWith('http')) {
-    const supabaseAdmin = require('../lib/supabase');
-    const bucketName = process.env.SUPABASE_STORAGE_BUCKET;
-
-    await supabaseAdmin.storage.from(bucketName).remove([publicId]);
-
-    // Eliminar thumbnail
-    const parts = publicId.split('/');
-    const filename = parts.pop();
-    const folder = parts.join('/');
-    const thumbId = `${folder}/thumbnails/thumb_${filename}`;
-    await supabaseAdmin.storage.from(bucketName).remove([thumbId]);
-
-  } else if (useCloudinary() && publicId) {
+  // Detectar proveedor por la URL real de la imagen (más confiable que verificar
+  // qué env vars están activas, porque la imagen puede ser de un proveedor anterior)
+  if (url && url.includes('cloudinary.com') && publicId) {
     const cloudinary = require('cloudinary').v2;
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -197,6 +191,15 @@ const deleteImage = async (url, publicId) => {
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
     await cloudinary.uploader.destroy(publicId);
+  } else if (url && url.includes('supabase.co') && publicId) {
+    const supabaseAdmin = require('../lib/supabase');
+    const bucketName = process.env.SUPABASE_STORAGE_BUCKET;
+    await supabaseAdmin.storage.from(bucketName).remove([publicId]);
+    const parts = publicId.split('/');
+    const filename = parts.pop();
+    const folder = parts.join('/');
+    const thumbId = `${folder}/thumbnails/thumb_${filename}`;
+    await supabaseAdmin.storage.from(bucketName).remove([thumbId]);
   } else if (url && url.startsWith('/uploads/')) {
     const filename = path.basename(url);
     const fullPath = path.join(__dirname, '../../uploads', filename);

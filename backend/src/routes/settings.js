@@ -20,6 +20,8 @@ router.get('/', async (req, res) => {
     settings.forEach((s) => {
       if (PUBLIC_KEYS.has(s.key)) obj[s.key] = s.value;
     });
+    // 5 min de caché en browser/proxy — reduce requests repetidos en la misma sesión
+    res.set('Cache-Control', 'public, max-age=300');
     res.json(obj);
   } catch {
     res.status(500).json({ error: 'Error al obtener configuración' });

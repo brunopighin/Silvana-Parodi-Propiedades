@@ -28,17 +28,15 @@ export default function Dashboard() {
   const [recentInquiries, setRecentInquiries] = useState([]);
 
   useEffect(() => {
-    propertiesApi.getAll({ limit: 100 }).then(({ data }) => {
-      const props = data.properties;
-      setStats({
-        total: data.pagination.total,
-        disponible: props.filter((p) => p.status === 'disponible').length,
-        vendido: props.filter((p) => p.status === 'vendido').length,
-        alquilado: props.filter((p) => p.status === 'alquilado').length,
-        reservado: props.filter((p) => p.status === 'reservado').length,
-      });
-      setRecentProperties(props.slice(0, 5));
-    }).catch(() => {});
+    // Stats exactas por estado via endpoint dedicado (evita traer 100 propiedades)
+    propertiesApi.getStats()
+      .then(({ data }) => setStats(data))
+      .catch(() => {});
+
+    // Solo las 5 más recientes para la tabla del dashboard
+    propertiesApi.getAll({ limit: 5 })
+      .then(({ data }) => setRecentProperties(data.properties))
+      .catch(() => {});
 
     inquiriesApi.getStats().then(({ data }) => setInquiryStats(data)).catch(() => {});
     inquiriesApi.getAll({ limit: 5 }).then(({ data }) => setRecentInquiries(data.inquiries || [])).catch(() => {});

@@ -88,6 +88,22 @@ router.get('/', optionalAuth, async (req, res) => {
   }
 });
 
+// GET /api/properties/stats (admin) - conteo por estado sin traer registros
+router.get('/stats', protect, requireAdmin, async (req, res) => {
+  try {
+    const [total, disponible, vendido, alquilado, reservado] = await Promise.all([
+      prisma.property.count(),
+      prisma.property.count({ where: { status: 'disponible' } }),
+      prisma.property.count({ where: { status: 'vendido' } }),
+      prisma.property.count({ where: { status: 'alquilado' } }),
+      prisma.property.count({ where: { status: 'reservado' } }),
+    ]);
+    res.json({ total, disponible, vendido, alquilado, reservado });
+  } catch {
+    res.status(500).json({ error: 'Error al obtener estadísticas' });
+  }
+});
+
 // GET /api/properties/by-id/:id (admin)
 router.get('/by-id/:id', protect, requireAdmin, async (req, res) => {
   try {

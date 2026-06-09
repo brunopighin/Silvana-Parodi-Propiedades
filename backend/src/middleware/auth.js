@@ -1,57 +1,39 @@
-const supabaseAdmin = require('../lib/supabase');
+const jwt = require('jsonwebtoken');
 
-const optionalAuth = async (req, res, next) => {
+const getUser = (token) => {
+  // Verificación local del JWT de Supabase — sin llamadas de red, sin threads extra.
+  // La misma clave secreta que usa Supabase para firmar tokens la usamos para verificarlos.
+  const decoded = jwt.verify(token, process.env.SUPABASE_JWT_SECRET);
+  return {
+    id: decoded.sub,
+    email: decoded.email,
+    name: decoded.user_metadata?.name || decoded.email?.split('@')[0] || 'Admin',
+    role: 'admin',
+  };
+};
+
+const optionalAuth = (req, res, next) => {
   const header = req.headers.authorization;
   if (!header?.startsWith('Bearer ')) return next();
-
-  const token = header.split(' ')[1];
   try {
-    const { data: { user } } = await supabaseAdmin.auth.getUser(token);
-    if (user) {
-      req.user = {
-        id: user.id,
-        email: user.email,
-        name: user.user_metadata?.name || user.email?.split('@')[0] || 'Admin',
-        role: 'admin',
-      };
-    }
+    req.user = getUser(header.split(' ')[1]);
   } catch { /* token inválido — continúa como anónimo */ }
   next();
 };
 
-const protect = async (req, res, next) => {
-  let token;
-
-  if (req.headers.authorization?.startsWith('Bearer ')) {
-    token = req.headers.authorization.split(' ')[1];
-  }
-
-  if (!token) {
+const protect = (req, res, next) => {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'No autorizado - Token requerido' });
   }
-
   try {
-    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-
-    if (error || !user) {
-      return res.status(401).json({ error: 'Token inválido o expirado' });
-    }
-
-    req.user = {
-      id: user.id,
-      email: user.email,
-      name: user.user_metadata?.name || user.email?.split('@')[0] || 'Admin',
-      role: 'admin',
-    };
-
+    req.user = getUser(header.split(' ')[1]);
     next();
   } catch {
-    return res.status(401).json({ error: 'Error de autenticación' });
+    return res.status(401).json({ error: 'Token inválido o expirado' });
   }
 };
 
-const requireAdmin = (req, res, next) => {
-  next();
-};
+const requireAdmin = (req, res, next) => next();
 
 module.exports = { protect, requireAdmin, optionalAuth };

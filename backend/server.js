@@ -1,22 +1,44 @@
 require('dotenv').config();
 
-// Validación temprana de variables de entorno críticas — si falta alguna,
-// el proceso lo informa con claridad antes de que createClient() de Supabase
-// crashee de forma silenciosa (Error: supabaseUrl is required).
-const REQUIRED_ENV_VARS = [
-  'DATABASE_URL',
-  'DIRECT_URL',
-  'SUPABASE_URL',
-  'SUPABASE_SERVICE_ROLE_KEY',
-  'SUPABASE_ANON_KEY',
+// Flag para distinguir errores de arranque vs. errores en requests en vuelo.
+// Durante el arranque cualquier error es fatal; después solo se registra.
+let startupComplete = false;
+
+process.on('uncaughtException', (err) => {
+  console.error('💥 uncaughtException:', err && err.stack ? err.stack : err);
+  if (!startupComplete) {
+    setTimeout(() => process.exit(1), 500);
+  }
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('💥 unhandledRejection:', reason && reason.stack ? reason.stack : reason);
+  if (!startupComplete) {
+    setTimeout(() => process.exit(1), 500);
+  }
+});
+
+// DATABASE_URL es la única variable verdaderamente crítica — sin ella Prisma
+// no puede conectarse y ningún endpoint funciona. El resto degrada features
+// específicos pero no impide que el servidor levante.
+const CRITICAL_ENV_VARS = ['DATABASE_URL'];
+const OPTIONAL_ENV_VARS = [
+  'DIRECT_URL', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY',
+  'SUPABASE_ANON_KEY', 'SUPABASE_JWT_SECRET',
 ];
-const missingEnvVars = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
-if (missingEnvVars.length > 0) {
-  console.error(`❌ Variables de entorno faltantes o vacías: ${missingEnvVars.join(', ')}`);
+
+const missingCritical = CRITICAL_ENV_VARS.filter((k) => !process.env[k]);
+if (missingCritical.length > 0) {
+  console.error(`❌ Variables críticas faltantes: ${missingCritical.join(', ')}`);
   console.error('El servidor no puede iniciar sin estas variables. Revisá la configuración del hosting.');
-  process.exit(1);
+  // Delay de 10 s para evitar loops de restart que agotan el límite de procesos
+  setTimeout(() => process.exit(1), 10000);
+} else {
+  const missingOptional = OPTIONAL_ENV_VARS.filter((k) => !process.env[k]);
+  if (missingOptional.length > 0) {
+    console.warn(`⚠️  Variables opcionales no configuradas (funcionalidad reducida): ${missingOptional.join(', ')}`);
+  }
+  console.log('✅ Variables de entorno verificadas');
 }
-console.log(`✅ Variables de entorno OK (${REQUIRED_ENV_VARS.length} verificadas)`);
 
 const express = require('express');
 const cors = require('cors');
@@ -56,19 +78,32 @@ app.use(cors({
     : ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
 }));
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api', generalLimiter);
 
 // Servir archivos estáticos (uploads)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Rutas
-app.use('/api/auth', authLimiter, require('./src/routes/auth'));
-app.use('/api/properties', require('./src/routes/properties'));
-app.use('/api/inquiries', inquiryLimiter, require('./src/routes/inquiries'));
-app.use('/api/testimonials', require('./src/routes/testimonials'));
-app.use('/api/settings', require('./src/routes/settings'));
+// Rutas — se cargan con log previo a cada require para identificar
+// en qué módulo específico falla el arranque si ocurre un crash.
+console.log('⏳ Cargando módulo: routes/auth');
+const authRoutes = require('./src/routes/auth');
+console.log('⏳ Cargando módulo: routes/properties');
+const propertiesRoutes = require('./src/routes/properties');
+console.log('⏳ Cargando módulo: routes/inquiries');
+const inquiriesRoutes = require('./src/routes/inquiries');
+console.log('⏳ Cargando módulo: routes/testimonials');
+const testimonialsRoutes = require('./src/routes/testimonials');
+console.log('⏳ Cargando módulo: routes/settings');
+const settingsRoutes = require('./src/routes/settings');
+console.log('✅ Todos los módulos de rutas cargados correctamente');
+
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/properties', propertiesRoutes);
+app.use('/api/inquiries', inquiryLimiter, inquiriesRoutes);
+app.use('/api/testimonials', testimonialsRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -116,9 +151,9 @@ ${properties.map(p => `  <url>
     res.send(xml);
   } catch (err) {
     res.status(500).send('Error generando sitemap');
-  } finally {
-    await prisma.$disconnect();
   }
+  // NO llamar prisma.$disconnect() — el cliente es un singleton compartido
+  // por todos los endpoints; desconectarlo aquí rompería las queries del resto de la app.
 });
 
 // Servir frontend en producción
@@ -144,9 +179,12 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, () => {
+  startupComplete = true;
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   console.log(`📊 Ambiente: ${process.env.NODE_ENV || 'development'}`);
 });
-server.timeout = 600000; // 10 minutos para uploads de video
+// 2 min: suficiente para subir 20 imágenes. 600 s era excesivo en hosting compartido.
+server.timeout = 120000;
+server.keepAliveTimeout = 65000;
 
 module.exports = app;

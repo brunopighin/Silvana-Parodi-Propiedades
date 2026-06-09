@@ -35,6 +35,7 @@ api.interceptors.response.use(
 // Properties
 export const propertiesApi = {
   getAll: (params) => api.get('/properties', { params }),
+  getStats: () => api.get('/properties/stats'),
   getById: (id) => api.get(`/properties/by-id/${id}`),
   getFeatured: () => api.get('/properties/featured'),
   getBySlug: (slug) => api.get(`/properties/${slug}`),
