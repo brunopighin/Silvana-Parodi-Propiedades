@@ -9,6 +9,27 @@ const toSlug = (text) =>
     .replace(/[^a-z0-9\s-]/g, '').trim()
     .replace(/\s+/g, '-');
 
+// Columnas numéricas (Float/Int) de Property: Postgres rechaza '' para estos tipos
+const NUMERIC_FIELDS = [
+  'price', 'latitude', 'longitude', 'totalArea', 'coveredArea',
+  'rooms', 'bedrooms', 'bathrooms', 'toilets', 'garageSpaces',
+  'expenses', 'yearBuilt', 'floors', 'floor',
+];
+
+// Convierte campos numéricos vacíos ('') a null y los strings con valor a Number
+const sanitizeNumericFields = (data) => {
+  const result = { ...data };
+  for (const field of NUMERIC_FIELDS) {
+    if (field in result) {
+      const value = result[field];
+      result[field] = value === '' || value === null || value === undefined
+        ? null
+        : Number(value);
+    }
+  }
+  return result;
+};
+
 const isAdmin = async () => {
   const { data: { session } } = await supabase.auth.getSession();
   return !!session?.user;
@@ -156,7 +177,8 @@ export const propertiesApi = {
   },
 
   create: async (propertyData) => {
-    const { id: _id, images: _img, inquiries: _inq, createdAt: _ca, updatedAt: _ua, ...data } = propertyData;
+    const { id: _id, images: _img, inquiries: _inq, createdAt: _ca, updatedAt: _ua, ...rest } = propertyData;
+    const data = sanitizeNumericFields(rest);
 
     let slug = toSlug(data.title || '');
     const { data: existing } = await supabase.from('Property').select('id').eq('slug', slug).maybeSingle();
@@ -164,7 +186,7 @@ export const propertiesApi = {
 
     const { data: property, error } = await supabase
       .from('Property')
-      .insert({ ...data, slug })
+      .insert({ ...data, slug, updatedAt: new Date().toISOString() })
       .select()
       .single();
     if (error) throw error;
@@ -172,7 +194,8 @@ export const propertiesApi = {
   },
 
   update: async (id, propertyData) => {
-    const { id: _id, images: _img, inquiries: _inq, createdAt: _ca, updatedAt: _ua, views: _v, slug: _s, videoUrl: _vid, ...data } = propertyData;
+    const { id: _id, images: _img, inquiries: _inq, createdAt: _ca, updatedAt: _ua, views: _v, slug: _s, videoUrl: _vid, ...rest } = propertyData;
+    const data = sanitizeNumericFields(rest);
 
     if (data.title) {
       const { data: current } = await supabase.from('Property').select('title').eq('id', id).single();
