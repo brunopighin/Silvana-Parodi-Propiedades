@@ -46,33 +46,42 @@ export default function About() {
         {/* Story */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mt-2">Nuestra historia</h2>
-              <p className="mt-6 text-gray-700 leading-relaxed text-lg font-medium">
-                Detrás de cada operación inmobiliaria hay mucho más que una compra o una venta: hay sueños, proyectos y decisiones importantes de vida.
-              </p>
-              <p className="mt-4 text-gray-600 leading-relaxed">
-                Mi camino comenzó con una convicción muy clara: dedicarme a lo que realmente me apasionaba. Por eso estudié la carrera de Martillero Público y Corredor Inmobiliario, formándome con compromiso, esfuerzo y la certeza de que estaba construyendo mi futuro profesional.
-              </p>
-              <p className="mt-4 text-gray-600 leading-relaxed">
-                Con trabajo, perseverancia y el acompañamiento incondicional de mi familia, logramos dar un gran paso: abrir nuestra propia oficina inmobiliaria. Un proyecto nacido del esfuerzo y construido sobre valores que hoy siguen siendo nuestra esencia.
-              </p>
-              <p className="mt-4 text-gray-600 leading-relaxed">
-                A lo largo de estos años hemos acompañado a decenas de familias e inversores en una de las decisiones más importantes de sus vidas, concretando más de 80 operaciones exitosas y desarrollando un profundo conocimiento del mercado inmobiliario.
-              </p>
-              <p className="mt-4 text-gray-600 leading-relaxed">
-                Pero más allá de los números, lo que verdaderamente nos define es nuestra forma de trabajar: escuchar, comprender, asesorar y acompañar a cada cliente con honestidad, profesionalismo y cercanía durante todo el proceso.
-              </p>
-              <p className="mt-4 text-gray-600 leading-relaxed">
-                La confianza que nuestros clientes depositan en nosotros y sus testimonios son nuestro mayor respaldo.
-              </p>
-              <p className="mt-4 text-primary-600 leading-relaxed font-medium italic">
-                Te invitamos a conocernos y descubrir una manera diferente de vivir la experiencia inmobiliaria.
-              </p>
-              <div className="mt-8 flex justify-center">
-                <Link to="/contacto" className="btn-primary">
-                  Contactanos hoy
-                </Link>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+              <div className="max-w-md mr-auto ml-0 -translate-x-8 sm:-translate-x-12 lg:-translate-x-24 lg:max-w-none">
+                <img
+                  src={`${import.meta.env.BASE_URL}fotomodificada.jpg`}
+                  alt="Oficina de Silvana Parodi Propiedades"
+                  className="rounded-2xl shadow-xl w-full object-cover object-left"
+                />
+              </div>
+              <div className="text-center lg:text-left">
+                <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mt-2">Nuestra historia</h2>
+                <p className="mt-6 text-gray-700 leading-relaxed text-lg font-medium">
+                  Detrás de cada operación inmobiliaria hay mucho más que una compra o una venta: hay sueños, proyectos y decisiones importantes de vida.
+                </p>
+                <p className="mt-4 text-gray-600 leading-relaxed">
+                  Mi camino comenzó con una convicción muy clara: dedicarme a lo que realmente me apasionaba. Por eso estudié la carrera de Martillero Público y Corredor Inmobiliario, formándome con compromiso, esfuerzo y la certeza de que estaba construyendo mi futuro profesional.
+                </p>
+                <p className="mt-4 text-gray-600 leading-relaxed">
+                  Con trabajo, perseverancia y el acompañamiento incondicional de mi familia, logramos dar un gran paso: abrir nuestra propia oficina inmobiliaria. Un proyecto nacido del esfuerzo y construido sobre valores que hoy siguen siendo nuestra esencia.
+                </p>
+                <p className="mt-4 text-gray-600 leading-relaxed">
+                  A lo largo de estos años hemos acompañado a decenas de familias e inversores en una de las decisiones más importantes de sus vidas, concretando más de 80 operaciones exitosas y desarrollando un profundo conocimiento del mercado inmobiliario.
+                </p>
+                <p className="mt-4 text-gray-600 leading-relaxed">
+                  Pero más allá de los números, lo que verdaderamente nos define es nuestra forma de trabajar: escuchar, comprender, asesorar y acompañar a cada cliente con honestidad, profesionalismo y cercanía durante todo el proceso.
+                </p>
+                <p className="mt-4 text-gray-600 leading-relaxed">
+                  La confianza que nuestros clientes depositan en nosotros y sus testimonios son nuestro mayor respaldo.
+                </p>
+                <p className="mt-4 text-primary-600 leading-relaxed font-medium italic">
+                  Te invitamos a conocernos y descubrir una manera diferente de vivir la experiencia inmobiliaria.
+                </p>
+                <div className="mt-8 flex justify-center lg:justify-start">
+                  <Link to="/contacto" className="btn-primary">
+                    Contactanos hoy
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
