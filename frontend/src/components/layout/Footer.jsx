@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="bg-gradient-to-br from-primary-800 via-primary-600 to-primary-500 text-gray-300">
       {/* Main footer */}
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center mb-4">
@@ -71,18 +71,6 @@ export default function Footer() {
                   <Link to={link.to} className="hover:text-primary-400 transition-colors">
                     {link.label}
                   </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Servicios */}
-          <div>
-            <h3 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Servicios</h3>
-            <ul className="space-y-3 text-sm">
-              {['Venta de Propiedades', 'Alquileres', 'Tasaciones', 'Administración', 'Asesoramiento', 'Inversiones'].map((s) => (
-                <li key={s}>
-                  <Link to="/servicios" className="hover:text-primary-400 transition-colors">{s}</Link>
                 </li>
               ))}
             </ul>
