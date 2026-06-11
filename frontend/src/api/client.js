@@ -169,7 +169,7 @@ export const propertiesApi = {
     data.images = (data.images || []).sort((a, b) => a.order - b.order);
 
     // Incrementar vistas sin bloquear la respuesta
-    supabase.rpc('increment_property_views', { property_id: data.id }).catch(() => {});
+    Promise.resolve(supabase.rpc('increment_property_views', { property_id: data.id })).catch(() => {});
 
     const { data: related } = await supabase
       .from('Property')
