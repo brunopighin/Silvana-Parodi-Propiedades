@@ -43,6 +43,13 @@ const removeFromStorage = async (url, publicId) => {
   }
 };
 
+// Extrae el path dentro del bucket a partir de una URL pública de Supabase Storage
+const extractStoragePath = (url) => {
+  const marker = `/storage/v1/object/public/${BUCKET}/`;
+  const idx = url?.indexOf(marker) ?? -1;
+  return idx === -1 ? null : url.slice(idx + marker.length);
+};
+
 // ─── Properties ────────────────────────────────────────────────────────────
 
 export const propertiesApi = {
@@ -306,9 +313,45 @@ export const propertiesApi = {
     return { data: { message: 'Imagen principal actualizada' } };
   },
 
-  // Video: no soportado en frontend-only (requiere servidor). Se deja como no-op.
-  uploadVideo: async () => { throw new Error('Upload de video no disponible en esta versión'); },
-  deleteVideo: async () => ({ data: {} }),
+  uploadVideo: async (propertyId, formData) => {
+    const file = formData.get('video');
+    const ext = (file.name.split('.').pop() || 'mp4').toLowerCase();
+    const name = `${crypto.randomUUID()}.${ext}`;
+    const storagePath = `properties/${propertyId}/video/${name}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(storagePath, file, { contentType: file.type, upsert: false });
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(storagePath);
+
+    const { error: dbError } = await supabase
+      .from('Property')
+      .update({ videoUrl: publicUrl, updatedAt: new Date().toISOString() })
+      .eq('id', propertyId);
+    if (dbError) throw dbError;
+
+    return { data: { videoUrl: publicUrl } };
+  },
+
+  deleteVideo: async (propertyId) => {
+    const { data: property } = await supabase
+      .from('Property').select('videoUrl').eq('id', propertyId).single();
+
+    if (property?.videoUrl) {
+      const path = extractStoragePath(property.videoUrl);
+      if (path) await supabase.storage.from(BUCKET).remove([path]);
+    }
+
+    const { error } = await supabase
+      .from('Property')
+      .update({ videoUrl: null, updatedAt: new Date().toISOString() })
+      .eq('id', propertyId);
+    if (error) throw error;
+
+    return { data: { message: 'Video eliminado' } };
+  },
 };
 
 // ─── Inquiries ──────────────────────────────────────────────────────────────
