@@ -128,7 +128,15 @@ export default function Footer() {
             © {year} {settings.agency_name || 'Silvana Parodi Propiedades'}. Todos los derechos reservados.
           </p>
           <p className="text-xs text-white/70">
-            Desarrollado por <span className="hover:text-white transition-colors">bjpsistemas</span>
+            Desarrollado por{' '}
+            <a
+              href="https://www.instagram.com/bjpsistemas/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              bjpsistemas
+            </a>
           </p>
         </div>
       </div>
