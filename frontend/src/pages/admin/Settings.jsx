@@ -36,7 +36,6 @@ const SECTIONS = {
     label: 'Sección Principal (Hero)',
     fields: [
       { key: 'hero_title', label: 'Título principal', type: 'text' },
-      { key: 'hero_subtitle', label: 'Subtítulo', type: 'textarea' },
     ],
   },
   seo: {

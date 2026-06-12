@@ -122,12 +122,9 @@ export default function Home() {
               transition: 'transform 0.15s ease-out',
             }}
           />
-          <h1 className="hero-3d-title font-display text-2xl md:text-4xl font-bold text-white leading-tight mb-3 max-w-2xl">
-            {settings.hero_title || 'Tu próximo hogar empieza acá.'}
+          <h1 className="hero-3d-title font-display text-2xl md:text-4xl font-bold text-white leading-tight mb-6 max-w-2xl">
+            {settings.hero_title ?? 'Tu próximo hogar empieza acá.'}
           </h1>
-          <p className="hero-3d-subtitle text-sm md:text-base text-white/75 leading-relaxed mb-6 max-w-xl">
-            {settings.hero_subtitle || 'Sabemos que buscar una propiedad es mucho más que un trámite: es una decisión de vida. Por eso, te brindamos la atención cálida y honesta que te merecés, para cuidar tu patrimonio. Encontrá tu espacio con nosotros.'}
-          </p>
           <div className="hero-3d-buttons flex flex-wrap justify-center gap-4">
             <Link to="/propiedades?operation=venta"
               className="inline-flex items-center gap-2 border-2 border-white/30 text-white hover:bg-white/10 font-semibold px-6 py-3 rounded-xl transition-all">
