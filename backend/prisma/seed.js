@@ -22,10 +22,10 @@ async function main() {
   );
 
   await prisma.user.upsert({
-    where: { email: process.env.ADMIN_EMAIL || 'admin@silvanaparodi.com.ar' },
+    where: { email: process.env.ADMIN_EMAIL || 'admin@silvanaparodipropiedades.com' },
     update: { password: hashedPassword, name: 'Silvana Parodi', role: 'admin' },
     create: {
-      email: process.env.ADMIN_EMAIL || 'admin@silvanaparodi.com.ar',
+      email: process.env.ADMIN_EMAIL || 'admin@silvanaparodipropiedades.com',
       password: hashedPassword,
       name: 'Silvana Parodi',
       role: 'admin',
@@ -69,7 +69,7 @@ async function main() {
 
   console.log('✓ Configuración inicial creada');
   console.log('\n✅ Seed completado exitosamente!');
-  console.log('📧 Email admin: ' + (process.env.ADMIN_EMAIL || 'admin@silvanaparodi.com.ar'));
+  console.log('📧 Email admin: ' + (process.env.ADMIN_EMAIL || 'admin@silvanaparodipropiedades.com'));
   console.log('⚠️  Recordá cambiar la contraseña del admin desde el panel.');
 }
 

@@ -106,7 +106,7 @@ export default function PropertyDetail() {
           '@type': 'RealEstateListing',
           name: property.title,
           description: property.description?.substring(0, 300),
-          url: `https://www.silvanaparodi.com.ar/propiedad/${property.slug}`,
+          url: `https://www.silvanaparodipropiedades.com/propiedad/${property.slug}`,
           image: property.images?.[0]?.url,
           offers: {
             '@type': 'Offer',

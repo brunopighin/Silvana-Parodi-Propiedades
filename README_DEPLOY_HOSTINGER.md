@@ -60,8 +60,8 @@ Agregar también estas para reducir el baseline de ~44 threads:
 | Variable | Valor |
 |----------|-------|
 | `NODE_ENV` | `production` |
-| `FRONTEND_URL` | `https://www.silvanaparodi.com.ar` |
-| `SITE_URL` | `https://www.silvanaparodi.com.ar` |
+| `FRONTEND_URL` | `https://www.silvanaparodipropiedades.com` |
+| `SITE_URL` | `https://www.silvanaparodipropiedades.com` |
 | `PORT` | (Hostinger asigna automáticamente, no hace falta setear) |
 
 ---

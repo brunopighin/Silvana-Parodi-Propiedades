@@ -9,7 +9,7 @@ export default function LocalBusinessSchema() {
     '@type': 'RealEstateAgent',
     name: settings.agency_name || 'Silvana Parodi Propiedades',
     description: settings.agency_tagline || 'Inmobiliaria en Luján, Buenos Aires. Venta, alquiler y tasaciones de propiedades.',
-    url: 'https://www.silvanaparodi.com.ar',
+    url: 'https://www.silvanaparodipropiedades.com',
     telephone: settings.phone || '+5492323537248',
     email: settings.email || 'silvanaparodiprop@gmail.com',
     address: {

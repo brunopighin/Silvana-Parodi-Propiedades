@@ -113,7 +113,7 @@ app.get('/api/health', (req, res) => {
 // Sitemap dinámico
 app.get('/sitemap.xml', async (req, res) => {
   const prisma = require('./src/lib/prisma');
-  const base = process.env.SITE_URL || 'https://www.silvanaparodi.com.ar';
+  const base = process.env.SITE_URL || 'https://www.silvanaparodipropiedades.com';
   const today = new Date().toISOString().split('T')[0];
 
   try {
