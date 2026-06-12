@@ -33,6 +33,14 @@ const protect = async (req, res, next) => {
   }
 };
 
-const requireAdmin = (req, res, next) => next();
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'silvanaparodipropiedades@gmail.com,bjpsistemas@hotmail.com')
+  .split(',').map((e) => e.trim().toLowerCase()).filter(Boolean);
+
+const requireAdmin = (req, res, next) => {
+  if (!ADMIN_EMAILS.includes(req.user?.email?.toLowerCase())) {
+    return res.status(403).json({ error: 'No autorizado' });
+  }
+  next();
+};
 
 module.exports = { protect, requireAdmin, optionalAuth };
