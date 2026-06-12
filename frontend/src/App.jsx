@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import WhatsAppButton from './components/ui/WhatsAppButton';
+import InstagramButton from './components/ui/InstagramButton';
 import ScrollToTop from './components/ui/ScrollToTop';
 import IntroScreen from './components/ui/IntroScreen';
 
@@ -50,6 +51,7 @@ function PublicLayout({ children }) {
       <Header />
       <main key={pathname} className="page-3d-enter">{children}</main>
       <Footer />
+      <InstagramButton />
       <WhatsAppButton />
     </>
   );
