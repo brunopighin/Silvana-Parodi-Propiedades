@@ -84,9 +84,11 @@ export default function Header() {
             className={`lg:hidden p-3 rounded-lg transition-colors ${
               'text-white hover:bg-white/10'
             }`}
-            aria-label="Menú"
+            aria-label={menuOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
-            <div className="w-6 flex flex-col gap-1.5">
+            <div className="w-6 flex flex-col gap-1.5" aria-hidden="true">
               <span className={`h-0.5 bg-current transition-all ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
               <span className={`h-0.5 bg-current transition-all ${menuOpen ? 'opacity-0' : ''}`} />
               <span className={`h-0.5 bg-current transition-all ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
@@ -96,9 +98,12 @@ export default function Header() {
       </div>
 
       {/* Mobile menu */}
-      <div className={`lg:hidden bg-white border-t border-gray-100 transition-all duration-300 ${
-        menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
-      }`}>
+      <div
+        id="mobile-menu"
+        className={`lg:hidden bg-white border-t border-gray-100 transition-all duration-300 ${
+          menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+        }`}
+      >
         <div className="container mx-auto px-4 py-4 flex flex-col gap-1">
           {navLinks.map((link) => (
             <NavLink

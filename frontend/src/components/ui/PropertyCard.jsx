@@ -71,10 +71,11 @@ export default function PropertyCard({ property }) {
         {/* Image count */}
         {property.images?.length > 1 && (
           <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3" aria-hidden="true">
               <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
             </svg>
-            {property.images.length}
+            <span className="sr-only">{property.images.length} fotos. </span>
+            <span aria-hidden="true">{property.images.length}</span>
           </div>
         )}
       </div>
@@ -116,7 +117,7 @@ export default function PropertyCard({ property }) {
 
         {/* Location */}
         <p className="flex items-center gap-1 text-xs text-gray-500 mb-3">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3 flex-shrink-0 text-primary-500">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3 flex-shrink-0 text-primary-500" aria-hidden="true">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
           </svg>
           {property.neighborhood ? `${property.neighborhood}, ` : ''}{property.city}
@@ -126,7 +127,7 @@ export default function PropertyCard({ property }) {
         <div className="grid grid-cols-4 gap-2 mb-3 py-2 border-t border-gray-100">
           {property.rooms && (
             <div className="flex flex-col items-center gap-0.5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400" aria-hidden="true">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               </svg>
               <span className="text-xs font-semibold text-gray-700">{property.rooms}</span>
@@ -135,7 +136,7 @@ export default function PropertyCard({ property }) {
           )}
           {property.bedrooms !== null && property.bedrooms !== undefined && (
             <div className="flex flex-col items-center gap-0.5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400" aria-hidden="true">
                 <path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7h18M3 7l2.5-4h13L21 7"/>
               </svg>
               <span className="text-xs font-semibold text-gray-700">{property.bedrooms}</span>
@@ -144,7 +145,7 @@ export default function PropertyCard({ property }) {
           )}
           {property.bathrooms && (
             <div className="flex flex-col items-center gap-0.5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400" aria-hidden="true">
                 <path d="M9 6 C9 4.34 10.34 3 12 3 C13.66 3 15 4.34 15 6 L15 10 L3 10 L3 14 C3 17.31 5.69 20 9 20 L15 20 C18.31 20 21 17.31 21 14 L21 10 L15 10"/>
               </svg>
               <span className="text-xs font-semibold text-gray-700">{property.bathrooms}</span>
@@ -153,7 +154,7 @@ export default function PropertyCard({ property }) {
           )}
           {property.coveredArea && (
             <div className="flex flex-col items-center gap-0.5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-gray-400" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="2"/>
                 <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
               </svg>
@@ -176,9 +177,10 @@ export default function PropertyCard({ property }) {
             target="_blank"
             rel="noopener noreferrer"
             className="w-9 h-9 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center transition-colors flex-shrink-0"
+            aria-label={`Consultar por "${property.title}" por WhatsApp (se abre en una pestaña nueva)`}
             title="Consultar por WhatsApp"
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z M12 0C5.373 0 0 5.373 0 12c0 2.116.554 4.103 1.523 5.824L.053 23.947c-.077.31.163.55.473.473l6.123-1.47A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.868 9.868 0 0 1-5.042-1.379l-.361-.213-3.741.898.913-3.74-.234-.381A9.865 9.865 0 0 1 2.118 12c0-5.444 4.438-9.882 9.882-9.882 5.444 0 9.882 4.438 9.882 9.882 0 5.444-4.438 9.882-9.882 9.882z"/>
             </svg>
           </a>

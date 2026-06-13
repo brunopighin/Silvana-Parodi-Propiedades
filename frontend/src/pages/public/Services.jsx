@@ -129,7 +129,7 @@ export default function Services() {
             <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-4">
               ¿Necesitás asesoramiento?
             </h2>
-            <p className="text-primary-100 mb-8 max-w-lg mx-auto">
+            <p className="text-white/90 mb-8 max-w-lg mx-auto">
               Contactanos ahora y uno de nuestros especialistas te orientará sin compromiso.
             </p>
             <div className="flex flex-wrap justify-center gap-4">

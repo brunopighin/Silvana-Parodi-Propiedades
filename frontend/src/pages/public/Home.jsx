@@ -204,7 +204,7 @@ export default function Home() {
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl" />
         <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block text-primary-300 font-semibold text-sm uppercase tracking-widest mb-4">
+            <span className="inline-block text-white/80 font-semibold text-sm uppercase tracking-widest mb-4">
               Propietarios
             </span>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
@@ -223,7 +223,7 @@ export default function Home() {
                 <div key={item.title} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-left">
                   <div className="text-3xl mb-3">{item.icon}</div>
                   <h3 className="font-semibold text-white mb-1">{item.title}</h3>
-                  <p className="text-primary-200 text-sm leading-relaxed">{item.desc}</p>
+                  <p className="text-white/85 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -322,7 +322,7 @@ export default function Home() {
           <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
             ¿Listo para encontrar tu propiedad?
           </h2>
-          <p className="text-primary-100 max-w-xl mx-auto mb-8 text-lg">
+          <p className="text-white/90 max-w-xl mx-auto mb-8 text-lg">
             Contactanos hoy y uno de nuestros asesores te guiará en todo el proceso.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

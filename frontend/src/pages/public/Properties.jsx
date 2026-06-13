@@ -105,10 +105,12 @@ export default function Properties() {
           {/* Search input */}
           <div className="relative mb-6">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none">
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" aria-hidden="true">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
+            <label htmlFor="properties-search" className="sr-only">Buscar por título, dirección o barrio</label>
             <input
+              id="properties-search"
               type="text"
               placeholder="Buscar por título, dirección, barrio..."
               value={searchDraft}
@@ -118,9 +120,10 @@ export default function Properties() {
             {searchDraft && (
               <button
                 onClick={() => { setSearchDraft(''); updateParam('search', ''); }}
+                aria-label="Borrar búsqueda"
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4" aria-hidden="true">
                   <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
               </button>
@@ -129,91 +132,96 @@ export default function Properties() {
 
           {/* Operation tabs */}
           <div className="flex gap-2 mb-6">
-            {[
-              { value: '', label: 'Todo' },
-              { value: 'venta', label: 'Venta' },
-              { value: 'alquiler', label: 'Alquiler' },
-              { value: 'alquiler-temporario', label: 'Temp.' },
-            ].map((op) => (
-              <button
-                key={op.value}
-                onClick={() => updateParam('operation', op.value)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                  params.operation === op.value
-                    ? 'bg-primary-500 text-white shadow-md'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-300'
-                }`}
-              >
-                {op.label}
-              </button>
-            ))}
+            <div role="group" aria-label="Filtrar por operación" className="flex gap-2">
+              {[
+                { value: '', label: 'Todo' },
+                { value: 'venta', label: 'Venta' },
+                { value: 'alquiler', label: 'Alquiler' },
+                { value: 'alquiler-temporario', label: 'Temp.' },
+              ].map((op) => (
+                <button
+                  key={op.value}
+                  onClick={() => updateParam('operation', op.value)}
+                  aria-pressed={params.operation === op.value}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                    params.operation === op.value
+                      ? 'bg-primary-500 text-white shadow-md'
+                      : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-300'
+                  }`}
+                >
+                  {op.label}
+                </button>
+              ))}
+            </div>
 
             <button
               onClick={() => setFiltersOpen(!filtersOpen)}
+              aria-expanded={filtersOpen}
+              aria-controls="properties-filters-panel"
               className={`ml-auto px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 border transition-all ${
                 hasFilters
                   ? 'border-primary-500 text-primary-500 bg-primary-50'
                   : 'border-gray-200 text-gray-600 bg-white hover:border-gray-300'
               }`}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4" aria-hidden="true">
                 <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/>
               </svg>
-              Filtros{hasFilters && <span className="w-5 h-5 bg-primary-500 text-white rounded-full text-xs flex items-center justify-center">!</span>}
+              Filtros{hasFilters && <span className="w-5 h-5 bg-primary-500 text-white rounded-full text-xs flex items-center justify-center" aria-hidden="true">!</span>}
             </button>
           </div>
 
           {/* Filters panel */}
           {filtersOpen && (
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+            <div id="properties-filters-panel" className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 <div>
-                  <label className="label text-xs">Tipo</label>
-                  <select value={params.type} onChange={(e) => updateParam('type', e.target.value)} className="input py-2.5 text-sm">
+                  <label htmlFor="filter-type" className="label text-xs">Tipo</label>
+                  <select id="filter-type" value={params.type} onChange={(e) => updateParam('type', e.target.value)} className="input py-2.5 text-sm">
                     {TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="label text-xs">Ciudad / Barrio</label>
-                  <input type="text" placeholder="Ej: Palermo" value={params.city}
+                  <label htmlFor="filter-city" className="label text-xs">Ciudad / Barrio</label>
+                  <input id="filter-city" type="text" placeholder="Ej: Palermo" value={params.city}
                     onChange={(e) => updateParam('city', e.target.value)} className="input py-2.5 text-sm" />
                 </div>
                 <div>
-                  <label className="label text-xs">Precio mínimo</label>
-                  <input type="number" placeholder="Sin mínimo" value={params.minPrice}
+                  <label htmlFor="filter-min-price" className="label text-xs">Precio mínimo</label>
+                  <input id="filter-min-price" type="number" placeholder="Sin mínimo" value={params.minPrice}
                     onChange={(e) => updateParam('minPrice', e.target.value)} className="input py-2.5 text-sm" />
                 </div>
                 <div>
-                  <label className="label text-xs">Precio máximo</label>
-                  <input type="number" placeholder="Sin máximo" value={params.maxPrice}
+                  <label htmlFor="filter-max-price" className="label text-xs">Precio máximo</label>
+                  <input id="filter-max-price" type="number" placeholder="Sin máximo" value={params.maxPrice}
                     onChange={(e) => updateParam('maxPrice', e.target.value)} className="input py-2.5 text-sm" />
                 </div>
                 <div>
-                  <label className="label text-xs">Ambientes</label>
-                  <select value={params.rooms} onChange={(e) => updateParam('rooms', e.target.value)} className="input py-2.5 text-sm">
+                  <label htmlFor="filter-rooms" className="label text-xs">Ambientes</label>
+                  <select id="filter-rooms" value={params.rooms} onChange={(e) => updateParam('rooms', e.target.value)} className="input py-2.5 text-sm">
                     <option value="">Cualquiera</option>
                     <option value="1">1+</option><option value="2">2+</option>
                     <option value="3">3+</option><option value="4">4+</option><option value="5">5+</option>
                   </select>
                 </div>
                 <div>
-                  <label className="label text-xs">Dormitorios</label>
-                  <select value={params.bedrooms} onChange={(e) => updateParam('bedrooms', e.target.value)} className="input py-2.5 text-sm">
+                  <label htmlFor="filter-bedrooms" className="label text-xs">Dormitorios</label>
+                  <select id="filter-bedrooms" value={params.bedrooms} onChange={(e) => updateParam('bedrooms', e.target.value)} className="input py-2.5 text-sm">
                     <option value="">Cualquiera</option>
                     <option value="1">1+</option><option value="2">2+</option>
                     <option value="3">3+</option><option value="4">4+</option>
                   </select>
                 </div>
                 <div>
-                  <label className="label text-xs">Baños</label>
-                  <select value={params.bathrooms} onChange={(e) => updateParam('bathrooms', e.target.value)} className="input py-2.5 text-sm">
+                  <label htmlFor="filter-bathrooms" className="label text-xs">Baños</label>
+                  <select id="filter-bathrooms" value={params.bathrooms} onChange={(e) => updateParam('bathrooms', e.target.value)} className="input py-2.5 text-sm">
                     <option value="">Cualquiera</option>
                     <option value="1">1+</option><option value="2">2+</option><option value="3">3+</option>
                   </select>
                 </div>
                 <div>
-                  <label className="label text-xs">Cochera</label>
-                  <select value={params.garage} onChange={(e) => updateParam('garage', e.target.value)} className="input py-2.5 text-sm">
+                  <label htmlFor="filter-garage" className="label text-xs">Cochera</label>
+                  <select id="filter-garage" value={params.garage} onChange={(e) => updateParam('garage', e.target.value)} className="input py-2.5 text-sm">
                     <option value="">Indistinto</option>
                     <option value="true">Con cochera</option>
                   </select>
@@ -244,16 +252,17 @@ export default function Properties() {
           ) : properties.length === 0 ? (
             <div className="text-center py-24">
               <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10 text-gray-300">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10 text-gray-300" aria-hidden="true">
                   <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">No encontramos propiedades</h3>
+              <h2 className="text-lg font-semibold text-gray-700 mb-2">No encontramos propiedades</h2>
               <p className="text-gray-400 mb-6">Intentá con otros filtros o consultanos directamente</p>
               <button onClick={clearAll} className="btn-primary">Limpiar filtros</button>
             </div>
           ) : (
             <>
+              <h2 className="sr-only">Resultados de la búsqueda</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {properties.map((property) => (
                   <PropertyCard key={property.id} property={property} />
@@ -262,7 +271,7 @@ export default function Properties() {
 
               {/* Pagination */}
               {pagination.pages > 1 && (
-                <div className="flex justify-center gap-2 mt-10">
+                <nav className="flex justify-center gap-2 mt-10" aria-label="Paginación de resultados">
                   {[...Array(pagination.pages)].map((_, i) => {
                     const p = i + 1;
                     const current = parseInt(params.page) || 1;
@@ -270,6 +279,8 @@ export default function Properties() {
                       <button
                         key={p}
                         onClick={() => updateParam('page', String(p))}
+                        aria-label={`Ir a la página ${p}`}
+                        aria-current={p === current ? 'page' : undefined}
                         className={`w-10 h-10 rounded-xl text-sm font-semibold transition-all ${
                           p === current
                             ? 'bg-primary-500 text-white'
@@ -280,7 +291,7 @@ export default function Properties() {
                       </button>
                     );
                   })}
-                </div>
+                </nav>
               )}
             </>
           )}

@@ -57,22 +57,13 @@ export default function About() {
               <div className="text-center lg:text-left">
                 <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mt-2">Nuestra historia</h2>
                 <p className="mt-6 text-gray-700 leading-relaxed text-lg font-medium">
-                  Detrás de cada operación inmobiliaria hay mucho más que una compra o una venta: hay sueños, proyectos y decisiones importantes de vida.
+                  Detrás de cada operación inmobiliaria hay sueños, proyectos y decisiones importantes. Nuestra historia nace de una vocación clara por el rubro, formada con compromiso, esfuerzo y el acompañamiento de la familia.
                 </p>
                 <p className="mt-4 text-gray-600 leading-relaxed">
-                  Mi camino comenzó con una convicción muy clara: dedicarme a lo que realmente me apasionaba. Por eso estudié la carrera de Martillero Público y Corredor Inmobiliario, formándome con compromiso, esfuerzo y la certeza de que estaba construyendo mi futuro profesional.
+                  Con perseverancia logramos abrir nuestra propia oficina, construida sobre valores como la honestidad, la confianza y el profesionalismo. A lo largo de estos años acompañamos a familias e inversores en decisiones clave, concretando más de 80 operaciones exitosas.
                 </p>
                 <p className="mt-4 text-gray-600 leading-relaxed">
-                  Con trabajo, perseverancia y el acompañamiento incondicional de mi familia, logramos dar un gran paso: abrir nuestra propia oficina inmobiliaria. Un proyecto nacido del esfuerzo y construido sobre valores que hoy siguen siendo nuestra esencia.
-                </p>
-                <p className="mt-4 text-gray-600 leading-relaxed">
-                  A lo largo de estos años hemos acompañado a decenas de familias e inversores en una de las decisiones más importantes de sus vidas, concretando más de 80 operaciones exitosas y desarrollando un profundo conocimiento del mercado inmobiliario.
-                </p>
-                <p className="mt-4 text-gray-600 leading-relaxed">
-                  Pero más allá de los números, lo que verdaderamente nos define es nuestra forma de trabajar: escuchar, comprender, asesorar y acompañar a cada cliente con honestidad, profesionalismo y cercanía durante todo el proceso.
-                </p>
-                <p className="mt-4 text-gray-600 leading-relaxed">
-                  La confianza que nuestros clientes depositan en nosotros y sus testimonios son nuestro mayor respaldo.
+                  Hoy, nuestro mayor respaldo es la confianza de nuestros clientes y una forma de trabajar basada en escuchar, comprender, asesorar y acompañar en cada etapa del proceso.
                 </p>
                 <p className="mt-4 text-primary-600 leading-relaxed font-medium italic">
                   Te invitamos a conocernos y descubrir una manera diferente de vivir la experiencia inmobiliaria.
@@ -115,7 +106,7 @@ export default function About() {
             <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-4">
               ¿Querés trabajar con nosotros?
             </h2>
-            <p className="text-primary-100 mb-8 max-w-xl mx-auto">
+            <p className="text-white/90 mb-8 max-w-xl mx-auto">
               Contactanos para iniciar el proceso de compra, venta o alquiler de tu propiedad.
             </p>
             <Link to="/contacto" className="inline-flex items-center gap-2 bg-white text-primary-600 hover:bg-gray-50 font-semibold px-8 py-3 rounded-xl transition-all">

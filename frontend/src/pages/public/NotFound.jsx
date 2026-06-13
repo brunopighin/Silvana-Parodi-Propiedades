@@ -11,7 +11,7 @@ export default function NotFound() {
       <div className="pt-20 min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           {/* Número 404 */}
-          <div className="relative mb-6">
+          <div className="relative mb-6" aria-hidden="true">
             <p className="font-display text-[10rem] font-bold leading-none text-primary-100 select-none">
               404
             </p>
