@@ -41,7 +41,7 @@ async function main() {
     { key: 'agency_description', value: 'Martillera Pública y Corredora Inmobiliaria dedicada a acompañar a cada cliente con honestidad, profesionalismo y cercanía en uno de los momentos más importantes de su vida.' },
     { key: 'phone', value: '+54 9 2323 537248' },
     { key: 'whatsapp', value: '5492323537248' },
-    { key: 'email', value: 'silvanaparodi.propiedades@gmail.com' },
+    { key: 'email', value: 'silvanaparodiprop@gmail.com' },
     { key: 'address', value: '' },
     { key: 'city', value: 'Lobos' },
     { key: 'province', value: 'Buenos Aires' },
