@@ -57,10 +57,10 @@ export default function About() {
               <div className="text-center lg:text-left">
                 <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mt-2">Nuestra historia</h2>
                 <p className="mt-6 text-gray-700 leading-relaxed text-lg font-medium">
-                  Detrás de cada operación inmobiliaria hay sueños, proyectos y decisiones importantes. Nuestra historia nace de una vocación clara por el rubro, formada con compromiso, esfuerzo y el acompañamiento de la familia.
+                  Nuestra historia nace de una vocación clara por el rubro, formada con compromiso, esfuerzo y el acompañamiento de la familia.
                 </p>
                 <p className="mt-4 text-gray-600 leading-relaxed">
-                  Con perseverancia logramos abrir nuestra propia oficina, construida sobre valores como la honestidad, la confianza y el profesionalismo. A lo largo de estos años acompañamos a familias e inversores en decisiones clave, concretando más de 80 operaciones exitosas.
+                  Con perseverancia logramos abrir nuestra propia oficina, construída sobre valores como la honestidad, la confianza y el profesionalismo. A lo largo de estos años acompañamos a familias e inversores en decisiones clave, concretando más de 80 operaciones exitosas.
                 </p>
                 <p className="mt-4 text-gray-600 leading-relaxed">
                   Hoy, nuestro mayor respaldo es la confianza de nuestros clientes y una forma de trabajar basada en escuchar, comprender, asesorar y acompañar en cada etapa del proceso.
