@@ -49,7 +49,7 @@ export default function ImageGallery({ images, title = 'la propiedad' }) {
             <img
               src={images[current]?.url}
               alt={`Foto ${current + 1} de ${title}`}
-              className="w-full h-full object-cover transition-opacity duration-200"
+              className="w-full h-full object-contain transition-opacity duration-200"
             />
           </button>
 
