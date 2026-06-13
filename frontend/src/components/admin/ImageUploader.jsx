@@ -89,7 +89,7 @@ export default function ImageUploader({ propertyId, images, onImagesChange }) {
     const newImages = [...images];
     const [moved] = newImages.splice(fromIndex, 1);
     newImages.splice(toIndex, 0, moved);
-    const withOrder = newImages.map((img, i) => ({ ...img, order: i }));
+    const withOrder = newImages.map((img, i) => ({ ...img, order: i, isMain: i === 0 }));
     onImagesChange(withOrder);
     setPendingOrder(true);
   };
