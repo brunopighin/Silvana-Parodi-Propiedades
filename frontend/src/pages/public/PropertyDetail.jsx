@@ -151,7 +151,7 @@ export default function PropertyDetail() {
         <div className="container mx-auto px-4 py-8">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main content */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-6 min-w-0">
               {/* Gallery */}
               <ImageGallery images={property.images} title={property.title} />
 
