@@ -91,14 +91,14 @@ export default function PropertiesList() {
             ))}
           </div>
 
-          <div className="flex gap-2 ml-auto">
+          <div className="flex gap-2 w-full sm:w-auto sm:ml-auto">
             <input
               type="text"
               placeholder="Buscar..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && load()}
-              className="input py-2 text-sm w-48"
+              className="input py-2 text-sm flex-1 sm:w-48"
             />
             <button onClick={load} className="btn-primary py-2 px-4 text-sm">Buscar</button>
           </div>
@@ -242,7 +242,7 @@ export default function PropertiesList() {
 
               {/* Pagination */}
               {pagination.pages > 1 && (
-                <div className="flex justify-center gap-1.5 p-4 border-t border-gray-100">
+                <div className="flex flex-wrap justify-center gap-1.5 p-4 border-t border-gray-100">
                   {[...Array(pagination.pages)].map((_, i) => {
                     const pg = i + 1;
                     return (

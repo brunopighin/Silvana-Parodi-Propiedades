@@ -131,8 +131,8 @@ export default function Properties() {
           </div>
 
           {/* Operation tabs */}
-          <div className="flex gap-2 mb-6">
-            <div role="group" aria-label="Filtrar por operación" className="flex gap-2">
+          <div className="flex flex-wrap gap-2 mb-6">
+            <div role="group" aria-label="Filtrar por operación" className="flex flex-wrap gap-2">
               {[
                 { value: '', label: 'Todo' },
                 { value: 'venta', label: 'Venta' },
@@ -271,7 +271,7 @@ export default function Properties() {
 
               {/* Pagination */}
               {pagination.pages > 1 && (
-                <nav className="flex justify-center gap-2 mt-10" aria-label="Paginación de resultados">
+                <nav className="flex flex-wrap justify-center gap-2 mt-10" aria-label="Paginación de resultados">
                   {[...Array(pagination.pages)].map((_, i) => {
                     const p = i + 1;
                     const current = parseInt(params.page) || 1;

@@ -362,7 +362,7 @@ export default function PropertyDetail() {
             {/* Sidebar */}
             <div className="space-y-5">
               {/* Price card */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 sticky top-24">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100 lg:sticky lg:top-24">
                 <p className="text-3xl font-bold text-primary-500 mb-1">
                   {formatPrice(property.price, property.currency)}
                 </p>

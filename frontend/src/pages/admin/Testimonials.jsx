@@ -52,7 +52,7 @@ export default function Testimonials() {
   return (
     <AdminLayout>
       <div className="space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-2xl font-bold text-gray-900">Testimonios</h1>
           <button onClick={() => { setEditing('new'); setForm({ name: '', text: '', rating: 5, role: '', active: true }); }}
             className="btn-primary text-sm py-2.5">

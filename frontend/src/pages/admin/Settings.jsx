@@ -107,7 +107,7 @@ export default function Settings() {
   return (
     <AdminLayout>
       <div className="space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-2xl font-bold text-gray-900">Configuración</h1>
           <button onClick={handleSave} disabled={saving} className="btn-primary text-sm py-2.5 flex items-center gap-2">
             {saving ? 'Guardando...' : saved ? (

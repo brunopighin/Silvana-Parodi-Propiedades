@@ -113,7 +113,7 @@ export default function PropertyForm() {
     <AdminLayout>
       <div className="space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <Link to="/admin/propiedades" className="text-sm text-gray-500 hover:text-primary-600 flex items-center gap-1 mb-1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>
@@ -249,7 +249,7 @@ export default function PropertyForm() {
                   </div>
                 </div>
 
-                <div className="flex gap-6 pt-2">
+                <div className="flex flex-wrap gap-6 pt-2">
                   <label className="flex items-center gap-2.5 cursor-pointer">
                     <input type="checkbox" {...register('featured')} className="w-4 h-4 accent-primary-500 rounded" />
                     <span className="text-sm font-medium text-gray-700">Propiedad destacada</span>

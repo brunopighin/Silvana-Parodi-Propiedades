@@ -44,7 +44,7 @@ export default function About() {
         </section>
 
         {/* Story */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-white overflow-x-hidden">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
               <div className="max-w-md mr-auto ml-0 -translate-x-8 sm:-translate-x-12 lg:-translate-x-24 lg:max-w-none">

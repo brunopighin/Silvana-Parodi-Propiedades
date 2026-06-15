@@ -12,7 +12,7 @@ export default function NotFound() {
         <div className="text-center max-w-md">
           {/* Número 404 */}
           <div className="relative mb-6" aria-hidden="true">
-            <p className="font-display text-[10rem] font-bold leading-none text-primary-100 select-none">
+            <p className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-bold leading-none text-primary-100 select-none">
               404
             </p>
             <div className="absolute inset-0 flex items-center justify-center">

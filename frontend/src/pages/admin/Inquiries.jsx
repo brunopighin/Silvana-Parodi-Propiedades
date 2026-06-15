@@ -48,7 +48,7 @@ export default function Inquiries() {
   return (
     <AdminLayout>
       <div className="space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
               Consultas
@@ -72,7 +72,7 @@ export default function Inquiries() {
 
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden flex" style={{ minHeight: '500px' }}>
           {/* List */}
-          <div className="w-full md:w-80 lg:w-96 border-r border-gray-100 flex-shrink-0 overflow-y-auto">
+          <div className={`w-full md:w-80 lg:w-96 border-r border-gray-100 flex-shrink-0 overflow-y-auto ${selected ? 'hidden md:block' : 'block'}`}>
             {loading ? (
               <div className="p-8 text-center text-gray-400">Cargando...</div>
             ) : inquiries.length === 0 ? (
@@ -105,10 +105,19 @@ export default function Inquiries() {
           </div>
 
           {/* Detail */}
-          <div className="flex-1 p-6 hidden md:block">
+          <div className={`flex-1 p-6 ${selected ? 'block' : 'hidden md:block'}`}>
             {selected ? (
               <div>
-                <div className="flex items-start justify-between mb-6">
+                <button
+                  onClick={() => setSelected(null)}
+                  className="md:hidden flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 mb-4 -ml-1"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                  Volver a consultas
+                </button>
+                <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">{selected.name}</h2>
                     <div className="flex gap-3 mt-1 text-sm text-gray-500">
