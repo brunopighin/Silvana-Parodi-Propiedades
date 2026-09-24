@@ -57,7 +57,8 @@ export default function Properties() {
   const updateParam = (key, value) => {
     const current = Object.fromEntries(searchParams.entries());
     if (value) current[key] = value; else delete current[key];
-    current.page = '1';
+    // Al cambiar un filtro se vuelve a la página 1; al cambiar de página se respeta el valor elegido
+    if (key !== 'page') current.page = '1';
     setSearchParams(current);
   };
 
